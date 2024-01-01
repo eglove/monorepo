@@ -1,19 +1,28 @@
+import { readFileSync } from 'node:fs';
+
 import * as docker from '@pulumi/docker';
 import * as k8s from '@pulumi/kubernetes';
 
 export const userServiceName = 'user-service';
 
 export function userService() {
+  const packageJson = readFileSync(
+    '../../apps/user-service/package.json',
+    'utf8',
+  );
+  const parsed = JSON.parse(packageJson) as { version: string };
+  const { version } = parsed;
+
   const userServiceImage = new docker.Image(`${userServiceName}-image`, {
     build: {
       context: '../../apps/user-service',
       dockerfile: '../../apps/user-service/Dockerfile',
       platform: 'linux/amd64',
     },
-    imageName: 'docker.io/eglove/user-service:1.0.0',
+    imageName: `docker.io/eglove/user-service:${version}`,
   });
 
-  return new k8s.core.v1.Pod(`${userServiceName}-pod`, {
+  const userServicePod = new k8s.core.v1.Pod(`${userServiceName}-pod`, {
     metadata: {
       labels: {
         component: userServiceName,
@@ -34,4 +43,29 @@ export function userService() {
       ],
     },
   });
+
+  const userServiceService = new k8s.core.v1.Service(
+    `${userServiceName}-port`,
+    {
+      metadata: {
+        name: `${userServiceName}-port`,
+      },
+      spec: {
+        ports: [
+          {
+            nodePort: 31_515,
+            port: 3050,
+            targetPort:
+              userServicePod.spec.containers[0].ports[0].containerPort,
+          },
+        ],
+        selector: {
+          component: userServiceName,
+        },
+        type: 'NodePort',
+      },
+    },
+  );
+
+  return { userServiceImage, userServicePod, userServiceService };
 }

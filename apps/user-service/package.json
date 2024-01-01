@@ -1,6 +1,7 @@
 {
   "name": "user-service",
   "description": "Demo App with Routing built-in (recommended)",
+  "version": "1.0.0",
   "engines": {
     "node": ">=15.0.0"
   },
