@@ -1,0 +1,9 @@
+{
+    "extends": ["plugin:qwik/recommended", "ethang"],
+    "rules": {
+        "react/no-unknown-property": "off",
+        "qwik/no-react-props": "off",
+        "unicorn/prefer-json-parse-buffer": "off",
+        "functional/immutable-data": "off"
+    }
+}

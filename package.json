@@ -1,0 +1,12 @@
+{
+  "name": "monorepo",
+  "author": "Ethan Glover",
+  "version": "1.0.0",
+  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "eslint-config-ethang": "^11.7.3"
+  }
+}
