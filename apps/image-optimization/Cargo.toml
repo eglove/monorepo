@@ -1,0 +1,21 @@
+[package]
+name = "image-optimization"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-multipart = "0.6.1"
+actix-web = "4"
+actix-web-httpauth = "0.8.1"
+aws-config = "1.1.1"
+aws-sdk-s3 = "1.11.0"
+dotenv = "0.15.0"
+jsonwebtoken = "9.2.0"
+serde = { version = "1.0.193", features = ["derive"] }
+base64 = "0.21.5"
+actix-rt = "2.9.0"
+serde_json = "1.0.109"
+awc = "3.3.0"
+log = "0.4.20"
