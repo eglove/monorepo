@@ -7,6 +7,8 @@ easily managed by custom CLIs.
 
 [Pulumi](https://www.pulumi.com/) is currently used to build and publish docker images and deploy to a local Kubernetes cluster.
 
+[Repo Link](/resources/pulumi)
+
 ### Current Services
 
 | Repo Link                         | Container                                                                   |
