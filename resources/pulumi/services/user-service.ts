@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 
 import * as docker from '@pulumi/docker';
 import * as k8s from '@pulumi/kubernetes';
-import type { core } from '@pulumi/kubernetes/types/input';
 
 export const userServiceName = 'user-service';
 
@@ -23,6 +22,7 @@ export function userService() {
     imageName: `docker.io/eglove/user-service:${version}`,
   });
 
+  // eslint-disable-next-line no-new
   new k8s.core.v1.Service(`${userServiceName}-port`, {
     metadata: {
       name: `${userServiceName}-port`,
@@ -42,16 +42,32 @@ export function userService() {
     },
   });
 
-  const container: core.v1.Container = {
-    image: userServiceImage.imageName,
-    name: userServiceName,
-    ports: [{ containerPort: port }],
-  };
-
-  const labels = { component: userServiceName };
-
-  return {
-    container,
-    labels,
-  };
+  // eslint-disable-next-line no-new
+  new k8s.apps.v1.Deployment('ethang', {
+    apiVersion: 'apps/v1',
+    kind: 'Deployment',
+    metadata: {
+      name: 'ethang',
+    },
+    spec: {
+      replicas: 1,
+      selector: {
+        matchLabels: { component: userServiceName },
+      },
+      template: {
+        metadata: {
+          labels: { component: userServiceName },
+        },
+        spec: {
+          containers: [
+            {
+              image: userServiceImage.imageName,
+              name: userServiceName,
+              ports: [{ containerPort: port }],
+            },
+          ],
+        },
+      },
+    },
+  });
 }
