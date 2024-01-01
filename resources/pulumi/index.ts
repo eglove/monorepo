@@ -1,26 +1,12 @@
 import * as k8s from '@pulumi/kubernetes';
+import * as docker from "@pulumi/docker";
+import {userService, userServiceName} from "./user-service";
 
-const userServicePod = new k8s.core.v1.Pod("user-service-pod", {
-    metadata: {
-        name: "user-service-pod",
-        labels: {
-            component: "user-service",
-        },
-    },
-    spec: {
-        containers: [{
-            name: "user-service",
-            image: "eglove/user-service:1.0.0",
-            ports: [{
-                containerPort: 3000,
-            }],
-        }],
-    },
-});
+const userServicePod = userService();
 
-const userServiceService = new k8s.core.v1.Service("user-service-port", {
+const userServiceService = new k8s.core.v1.Service(`${userServiceName}-port`, {
     metadata: {
-        name: "user-service-port"
+        name: `${userServiceName}-port`
     },
     spec: {
         type: "NodePort",
@@ -30,7 +16,7 @@ const userServiceService = new k8s.core.v1.Service("user-service-port", {
             nodePort: 31515,
         }],
         selector: {
-            component: "user-service"
+            component: userServiceName
         }
     }
 });

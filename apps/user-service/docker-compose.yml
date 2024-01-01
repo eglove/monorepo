@@ -1,9 +1,0 @@
-version: "3.9"
-services:
-  user-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: eglove/user-service:1.0.0
-    ports:
-      - "3000:3000"
