@@ -44,7 +44,6 @@ async fn save_files(
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-    std::fs::create_dir_all("./img_tmp").expect("Failed to create tmp directory");
 
     HttpServer::new(|| {
         App::new()
