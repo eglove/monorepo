@@ -2,10 +2,12 @@ import { readFileSync } from 'node:fs';
 
 import * as docker from '@pulumi/docker';
 import * as k8s from '@pulumi/kubernetes';
+import type { core } from '@pulumi/kubernetes/types/input';
 
 export const userServiceName = 'user-service';
 
 export function userService() {
+  const port = 3000;
   const projectRoot = '../../apps/user-service';
 
   const packageJson = readFileSync(`${projectRoot}/package.json`, 'utf8');
@@ -21,50 +23,35 @@ export function userService() {
     imageName: `docker.io/eglove/user-service:${version}`,
   });
 
-  const userServicePod = new k8s.core.v1.Pod(`${userServiceName}-pod`, {
+  new k8s.core.v1.Service(`${userServiceName}-port`, {
     metadata: {
-      labels: {
-        component: userServiceName,
-      },
-      name: `${userServiceName}-pod`,
+      name: `${userServiceName}-port`,
     },
     spec: {
-      containers: [
+      ports: [
         {
-          image: userServiceImage.imageName,
-          name: userServiceName,
-          ports: [
-            {
-              containerPort: 3000,
-            },
-          ],
+          nodePort: 31_515,
+          port: 3050,
+          targetPort: port,
         },
       ],
+      selector: {
+        component: userServiceName,
+      },
+      type: 'NodePort',
     },
   });
 
-  const userServiceService = new k8s.core.v1.Service(
-    `${userServiceName}-port`,
-    {
-      metadata: {
-        name: `${userServiceName}-port`,
-      },
-      spec: {
-        ports: [
-          {
-            nodePort: 31_515,
-            port: 3050,
-            targetPort:
-              userServicePod.spec.containers[0].ports[0].containerPort,
-          },
-        ],
-        selector: {
-          component: userServiceName,
-        },
-        type: 'NodePort',
-      },
-    },
-  );
+  const container: core.v1.Container = {
+    image: userServiceImage.imageName,
+    name: userServiceName,
+    ports: [{ containerPort: port }],
+  };
 
-  return { userServiceImage, userServicePod, userServiceService };
+  const labels = { component: userServiceName };
+
+  return {
+    container,
+    labels,
+  };
 }
