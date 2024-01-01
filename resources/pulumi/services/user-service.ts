@@ -19,7 +19,7 @@ export function userService() {
       dockerfile: `${projectRoot}/Dockerfile`,
       platform: 'linux/amd64',
     },
-    imageName: `ghcr.io/eglove/user-service:${version}`,
+    imageName: `ghcr.io/eglove/${userServiceName}:${version}`,
   });
 
   // eslint-disable-next-line no-new
@@ -43,11 +43,11 @@ export function userService() {
   });
 
   // eslint-disable-next-line no-new
-  new k8s.apps.v1.Deployment('ethang', {
+  new k8s.apps.v1.Deployment(userServiceName, {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: 'ethang',
+      name: userServiceName,
     },
     spec: {
       replicas: 1,
