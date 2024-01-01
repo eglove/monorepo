@@ -19,7 +19,7 @@ export function userService() {
       dockerfile: `${projectRoot}/Dockerfile`,
       platform: 'linux/amd64',
     },
-    imageName: `docker.io/eglove/user-service:${version}`,
+    imageName: `ghcr.io/eglove/user-service:${version}`,
   });
 
   // eslint-disable-next-line no-new
