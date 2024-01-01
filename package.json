@@ -1,0 +1,8 @@
+{
+	"eslintConfig": {
+		"extends": "ethang"
+	},
+	"devDependencies": {
+		"eslint-config-ethang": "^11.7.3"
+	}
+}
