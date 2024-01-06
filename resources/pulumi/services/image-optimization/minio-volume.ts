@@ -1,6 +1,6 @@
 import * as k8s from '@pulumi/kubernetes';
 
-export function minioVolume() {
+export function minioVolume(mountPath: string) {
   new k8s.core.v1.PersistentVolume('minio-persistent-volume', {
     metadata: {
       name: 'minio-data-pv',
@@ -11,7 +11,7 @@ export function minioVolume() {
         storage: '1Gi',
       },
       hostPath: {
-        path: '/mnt/data',
+        path: `/mnt${mountPath}`,
       },
       persistentVolumeReclaimPolicy: 'Retain',
       storageClassName: 'storage-class',
@@ -38,7 +38,6 @@ export function minioVolume() {
 
   return {
     claimName: persistentVolumeClaim.metadata.name,
-    mountPath: '/data',
     name: 'minio-volume',
   };
 }
