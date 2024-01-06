@@ -1,6 +1,9 @@
 {
 	"eslintConfig": {
-		"extends": "ethang"
+		"extends": "ethang",
+		"rules": {
+			"no-new": "off"
+		}
 	},
 	"devDependencies": {
 		"eslint-config-ethang": "^11.7.3"
