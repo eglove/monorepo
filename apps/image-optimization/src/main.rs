@@ -1,21 +1,13 @@
 mod validate_token;
 
-use actix_multipart::form::MultipartForm;
-use actix_multipart::form::tempfile::{TempFile};
 use actix_multipart::Multipart;
-use aws_sdk_s3;
 use actix_web::{App, HttpResponse, HttpServer, Responder, Error, get, post};
 use dotenv::dotenv;
-use futures::{StreamExt, TryStreamExt};
-use image::{GenericImageView};
-use std::io::Write;
-use actix_http::StatusCode;
-
-#[derive(Debug, MultipartForm)]
-struct UploadForm {
-    #[multipart(rename = "image")]
-    files: Vec<TempFile>,
-}
+use futures::{StreamExt};
+use minio::s3::client::Client;
+use minio::s3::args::{GetObjectArgs, MakeBucketArgs, UploadObjectArgs};
+use minio::s3::creds::StaticProvider;
+use minio::s3::http::BaseUrl;
 
 #[post("/upload")]
 async fn upload(mut payload: Multipart) -> Result<HttpResponse, Error> {
@@ -31,18 +23,48 @@ async fn upload(mut payload: Multipart) -> Result<HttpResponse, Error> {
         let content_disposition = field.content_disposition();
         let filename = content_disposition.get_filename().unwrap();
 
-        let img = image::load_from_memory(&bytes)
-            .map_err(|e| { Error::from(actix_web::error::InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR)) })?;
+        let base_url = "localhost:9000".parse::<BaseUrl>().unwrap();
+        let provider = StaticProvider::new("admin", "password", None);
+        let minio_client = Client::new(base_url.clone(), Some(Box::new(provider)), None, None).unwrap();
+        let bucket_name = "test_bucket";
+        let exists = minio_client.make_bucket(&MakeBucketArgs::new(&bucket_name).unwrap()).await;
 
-        // Vector of desired sizes
-        let sizes = vec![100, 200, 300];
+        if exists.is_err() {
+            minio_client.make_bucket(&MakeBucketArgs::new(&bucket_name).unwrap()).await.unwrap();
+        }
 
-        for size in sizes {
-            // Create a new image with size x size pixels
-            let resized = img.resize_to_fill(size, size, image::imageops::FilterType::Triangle);
-            // Here you can push the resized image to the storage
-            // For this example, I'll just output a message about new image size
-            println!("New image size for {}: {}x{}", filename, resized.width(), resized.height());
+        minio_client.upload_object(
+            &mut UploadObjectArgs::new(
+                &bucket_name,
+                filename,
+                filename,
+            )
+                .unwrap(),
+        )
+            .await
+            .unwrap();
+
+        let object = minio_client.get_object(&GetObjectArgs{
+            extra_headers: None,
+            extra_query_params: None,
+            region: None,
+            bucket: "test_bucket",
+            object: filename,
+            version_id: None,
+            ssec: None,
+            offset: None,
+            length: None,
+            match_etag: None,
+            not_match_etag: None,
+            modified_since: None,
+            unmodified_since: None,
+        }).await;
+
+        if let Ok(obj) = object {
+            match obj.text().await {
+                Ok(obj_str) => println!("{}", obj_str),
+                Err(_) => println!("Failed to read object"),
+            }
         }
     }
 
