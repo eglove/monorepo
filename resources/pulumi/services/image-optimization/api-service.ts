@@ -7,7 +7,7 @@ export function apiService(
   minioPort1: number,
   minioPort2: number,
 ) {
-  new k8s.core.v1.Service(`${imageOptimizationServiceName}-cluster-ip`, {
+  return new k8s.core.v1.Service(`${imageOptimizationServiceName}-cluster-ip`, {
     metadata: {
       name: `${imageOptimizationServiceName}-cluster-ip`,
     },

@@ -1,5 +1,56 @@
+import * as k8s from '@pulumi/kubernetes';
+
 import { imageOptimization } from './services/image-optimization/image-optimization';
 import { userService } from './services/user-service/user-service';
 
-userService();
-imageOptimization();
+const { clusterService: userClusterService, port: userServicePort } =
+  userService();
+const { clusterService: imageService, apiPort: imagePort } =
+  imageOptimization();
+
+const nginxIngress = new k8s.yaml.ConfigFile('nginx-ingress-controller', {
+  file: 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml',
+});
+
+new k8s.networking.v1.Ingress('nginx-ingress', {
+  metadata: {
+    annotations: {
+      'kubernetes.io/ingress.class': 'nginx',
+      'nginx.ingress.kubernetes.io/rewrite-target': '/',
+    },
+  },
+  spec: {
+    rules: [
+      {
+        http: {
+          paths: [
+            {
+              backend: {
+                service: {
+                  name: userClusterService.metadata.name,
+                  port: {
+                    number: userServicePort,
+                  },
+                },
+              },
+              path: '/user',
+              pathType: 'Prefix',
+            },
+            {
+              backend: {
+                service: {
+                  name: imageService.metadata.name,
+                  port: {
+                    number: imagePort,
+                  },
+                },
+              },
+              path: '/image',
+              pathType: 'Prefix',
+            },
+          ],
+        },
+      },
+    ],
+  },
+});

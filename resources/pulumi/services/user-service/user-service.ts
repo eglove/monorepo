@@ -9,7 +9,9 @@ export function userService() {
 
   const image = userServiceImage();
 
-  userServiceService(port);
+  const clusterService = userServiceService(port);
 
   userServiceDeployment(image.imageName, port);
+
+  return { clusterService, port };
 }

@@ -12,7 +12,7 @@ export function imageOptimization() {
 
   const image = apiImage();
 
-  apiService(apiPort, minioPort1, minioPort2);
+  const clusterService = apiService(apiPort, minioPort1, minioPort2);
 
   const minioItems = minio();
 
@@ -22,4 +22,6 @@ export function imageOptimization() {
     minioItems.container,
     minioItems.volumes,
   );
+
+  return { apiPort, clusterService };
 }
