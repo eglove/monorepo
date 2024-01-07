@@ -1,7 +1,7 @@
 import { apiDeployment } from './api-deployment';
 import { apiImage } from './api-image';
 import { apiService } from './api-service';
-import { minio } from './minio';
+import { mongo } from './mongo';
 
 export const imageOptimizationServiceName = 'image-optimization';
 
@@ -14,13 +14,13 @@ export function imageOptimization() {
 
   const clusterService = apiService(apiPort, minioPort1, minioPort2);
 
-  const minioItems = minio();
+  const mongoItems = mongo();
 
   apiDeployment(
     image.imageName,
     apiPort,
-    minioItems.container,
-    minioItems.volumes,
+    mongoItems.container,
+    mongoItems.volumes,
   );
 
   return { apiPort, clusterService };

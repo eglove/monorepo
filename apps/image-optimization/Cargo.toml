@@ -1,6 +1,6 @@
 [package]
 name = "image-optimization"
-version = "0.1.0"
+version = "0.1.2"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -20,4 +20,6 @@ log = "0.4.20"
 actix-http = "3.5.1"
 image = "0.24.7"
 futures = "0.3.30"
-minio = "0.1.0"
+mongodb = "2.8.0"
+futures-util = "0.3.30"
+bytes = "1.5.0"

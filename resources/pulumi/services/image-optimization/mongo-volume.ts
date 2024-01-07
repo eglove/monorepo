@@ -1,11 +1,11 @@
 import * as k8s from '@pulumi/kubernetes';
 
-export function minioVolume() {
+export function mongoVolume() {
   const persistentVolumeClaim = new k8s.core.v1.PersistentVolumeClaim(
-    'minio-volume-claim',
+    'mongodb-claim',
     {
       metadata: {
-        name: 'minio-data-pvc',
+        name: 'mongo-data-pvc',
       },
       spec: {
         accessModes: ['ReadWriteOnce'],
@@ -20,6 +20,6 @@ export function minioVolume() {
 
   return {
     claimName: persistentVolumeClaim.metadata.name,
-    name: 'minio-volume',
+    name: 'mongo-volume',
   };
 }
