@@ -8,6 +8,12 @@ import (
 	"mime/multipart"
 )
 
+type CreateImageRequest struct {
+	Name        string                `form:"name" binding:"required"`
+	Description string                `form:"description" binding:"required"`
+	File        *multipart.FileHeader `form:"file" binding:"required"`
+}
+
 type Image struct {
 	Id          primitive.ObjectID    `bson:"_id,omitempty" form:"id"`
 	Name        string                `form:"name" binding:"required"`

@@ -11,15 +11,19 @@ import (
 
 func createImage(context *gin.Context) {
 	var imageModel models.Image
+	var imageRequestModel models.CreateImageRequest
 	errorMap := utils.NewErrorMap()
 
 	// Validate body
-	err := context.ShouldBind(&imageModel)
+	err := context.ShouldBind(&imageRequestModel)
 	if err != nil {
 		response := utils.BindErrorFormat(err)
 		context.JSON(http.StatusBadRequest, utils.NewResponseData(response, nil))
 		return
 	}
+	imageModel.Name = imageRequestModel.Name
+	imageModel.Description = imageRequestModel.Description
+	imageModel.File = imageRequestModel.File
 
 	// Read file
 	file, _, err := context.Request.FormFile("file")
