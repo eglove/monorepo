@@ -1,0 +1,19 @@
+POST http://localhost:8080/image
+Content-Type: multipart/form-data; boundary=boundary-string
+
+--boundary-string
+Content-Disposition: form-data; name="name"
+
+filename
+
+--boundary-string
+Content-Disposition: form-data; name="description"
+
+some good description
+
+--boundary-string
+Content-Disposition: form-data; name="file"; filename="WebStorm.png"
+Content-Type: image/png
+
+< ./WebStorm.png
+--boundary-string--
