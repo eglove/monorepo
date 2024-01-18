@@ -1,5 +1,8 @@
 import { forEach, isEmpty, isNil, isObject, isString } from 'lodash';
 
+import { tryCatch } from '../functional/try-catch.ts';
+import type { HandledError } from '../types/error.js';
+
 export type UrlConfig = {
   pathVariables?: Array<string | number>;
   searchParams?: string | Record<string, unknown>;
@@ -7,32 +10,49 @@ export type UrlConfig = {
 };
 
 class UrlBuilder {
-  private _url: URL;
+  private _url: string | URL;
   private readonly searchParameters: URLSearchParams;
   private readonly pathVariables: Array<string | number | undefined>;
+  private readonly _config: UrlConfig | undefined;
 
-  public constructor(urlString: string, config?: UrlConfig) {
-    this._url = new URL(urlString, config?.urlBase);
+  public constructor(urlString: string | URL, config?: UrlConfig) {
+    this._url = urlString;
+    this._config = config;
     this.pathVariables = config?.pathVariables ?? [];
     this.searchParameters = this.buildSearchParameters(config?.searchParams);
   }
 
-  public get url(): URL {
+  public get url(): HandledError<URL, Error> {
     return this.buildUrl();
   }
 
-  public toString(): string {
-    return this.buildUrl().toString();
+  public toString(): HandledError<string, Error> {
+    const url = this.buildUrl();
+
+    if (!url.isSuccess) {
+      return url;
+    }
+
+    return { data: url.data.toString(), isSuccess: true };
   }
 
-  private buildUrl(): URL {
-    if (!isEmpty(this.pathVariables)) {
-      let urlString = this._url.toString();
+  private buildUrl(): HandledError<URL, Error> {
+    let urlString = this._url.toString();
+    this._url = new URL(urlString, this._config?.urlBase);
 
+    if (!isEmpty(this.pathVariables)) {
       for (const pathVariable of this.pathVariables) {
         if (pathVariable !== undefined) {
           urlString += `${pathVariable}/`;
         }
+      }
+
+      const url = tryCatch(() => {
+        return new URL(urlString);
+      });
+
+      if (!url.isSuccess) {
+        return { error: url.error, isSuccess: false };
       }
 
       this._url = new URL(urlString);
@@ -44,7 +64,7 @@ class UrlBuilder {
       }
     }
 
-    return this._url;
+    return { data: this._url, isSuccess: true };
   }
 
   private buildSearchParameters(

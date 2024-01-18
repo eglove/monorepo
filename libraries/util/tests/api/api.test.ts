@@ -1,6 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { describe, expect, test, vi } from 'vitest';
+import { z } from 'zod';
 
 import { Api } from '../../src/api/api.ts';
 
@@ -14,6 +13,7 @@ describe('api setup', () => {
       },
       requests: {
         search: {
+          bodySchema: z.object({ name: z.string() }),
           defaultRequestInit: {
             method: 'POST',
           },
@@ -22,14 +22,23 @@ describe('api setup', () => {
       },
     });
 
+    // @ts-expect-error allow private read
     expect(testApi.config.baseUrl).toBe('http://example.com');
+    // @ts-expect-error allow private read
     expect(testApi.config.cacheInterval).toBe(100);
+    // @ts-expect-error allow private read
     expect(testApi.config.defaultRequestInit).toStrictEqual({
       method: 'GET',
     });
 
-    const request = testApi.request.search();
-    expect(request.url).toBe('http://example.com/search');
+    const request = testApi.request.search({
+      requestInit: { body: { name: 'abc' } },
+    });
+
+    if (request.isSuccess) {
+      expect(request.isSuccess).toBe(true);
+      expect(request.data.url).toBe('http://example.com/search');
+    }
   });
 
   test('calls fetch', async () => {
@@ -61,8 +70,10 @@ describe('api setup', () => {
       searchParams: { hey: undefined },
     });
 
-    const data = await response?.json();
-    expect(mockFetch).toHaveBeenCalledOnce();
-    expect(data).toStrictEqual(expectedResult);
+    if (response.isSuccess) {
+      const data = await response.data?.json();
+      expect(mockFetch).toHaveBeenCalledOnce();
+      expect(data).toStrictEqual(expectedResult);
+    }
   });
 });

@@ -2,7 +2,9 @@ import type { IDBPDatabase } from 'idb';
 import { openDB } from 'idb';
 import { isNil } from 'lodash';
 
+import { tryCatchAsync } from '../functional/try-catch.ts';
 import { isBrowser } from '../is/browser.ts';
+import type { HandledError } from '../types/error.js';
 
 type FetcherOptions = {
   cacheInterval?: number;
@@ -45,9 +47,11 @@ class Fetcher {
     this._cacheInterval = interval;
   }
 
-  public async fetch() {
+  public async fetch(): Promise<HandledError<Response | undefined, Error>> {
     if (!isBrowser || isNil(this._cacheInterval) || this._cacheInterval <= 0) {
-      return fetch(this._request);
+      return tryCatchAsync(() => {
+        return fetch(this._request);
+      });
     }
 
     const cache = await caches.open(this._cacheKey);
@@ -60,7 +64,7 @@ class Fetcher {
 
     const cachedResponse = await cache.match(this._request);
     if (cachedResponse) {
-      return cachedResponse;
+      return { data: cachedResponse, isSuccess: true };
     }
 
     const expires = new Date();
@@ -74,7 +78,7 @@ class Fetcher {
         .put({ expires, key: requestKey } satisfies RequestMeta),
     ]);
 
-    return cache.match(this._request);
+    return { data: await cache.match(this._request), isSuccess: true };
   }
 
   public getRequestKey() {

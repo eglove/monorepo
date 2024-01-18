@@ -92,7 +92,7 @@ class BetterNumber {
     to: To,
   ) {
     if (!isNil(this._number)) {
-      // @ts-expect-error ugh..
+      // @ts-expect-error ugh... this gives proper autocomplete
       return convert(this._number, from).to(to);
     }
   }

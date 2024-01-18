@@ -1,11 +1,14 @@
 import { isNil, merge } from 'lodash';
-import type { ZodSchema } from 'zod';
+import type { z, ZodSchema } from 'zod';
 
 import { fetcher } from '../fetch/fetcher.ts';
 import { urlBuilder } from '../fetch/url-builder.ts';
+import { parseJson } from '../json/json.ts';
+import type { HandledError } from '../types/error.js';
+import type { ZodValidator } from '../types/zod-validator.js';
 
 type RequestConfig = {
-  bodySchema?: ZodSchema;
+  bodySchema?: ZodValidator;
   defaultRequestInit?: RequestInit;
   path: string;
   pathVariableLength?: number;
@@ -21,14 +24,20 @@ type ApiConfig<T extends Record<string, Readonly<RequestConfig>>> = {
 
 type RequestOptions = {
   pathVariables?: Array<string | number>;
-  requestInit?: RequestInit;
+  requestInit?: RequestInit | Record<string, unknown>;
   searchParams?: Record<string, string | number | undefined>;
 };
 
-type RequestFunction = (options?: RequestOptions) => Request;
+type RequestFunction = (
+  options?: RequestOptions,
+) => HandledError<Request, z.ZodError | Error>;
 
 type FetchOptions = RequestOptions & { cacheInterval?: number };
-type FetchFunction = (options?: FetchOptions) => Promise<Response | undefined>;
+type FetchFunction = (
+  options?: FetchOptions,
+) =>
+  | Promise<HandledError<Response | undefined, Error>>
+  | HandledError<Response | undefined, Error | z.ZodError>;
 
 export class Api<T extends Record<string, Readonly<RequestConfig>>> {
   private readonly config: ApiConfig<T>;
@@ -56,9 +65,15 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
 
   private generateFetchMethod(key: string): FetchFunction {
     return (options?: FetchOptions) => {
+      const request = this.request[key](options);
+
+      if (!request.isSuccess) {
+        return { error: request.error, isSuccess: false };
+      }
+
       return fetcher({
         cacheInterval: options?.cacheInterval ?? this.globalCacheInterval,
-        request: this.request[key](options),
+        request: request.data,
       }).fetch();
     };
   }
@@ -66,29 +81,45 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
   private generateRequestMethod(key: string): RequestFunction {
     const requestConfig = this.config.requests[key];
 
-    return (options?: RequestOptions): Request => {
+    return (options?: RequestOptions) => {
       if (!isNil(requestConfig.bodySchema)) {
         const bodyInit = options?.requestInit?.body;
 
         if (typeof bodyInit === 'string') {
-          requestConfig.bodySchema.parse(JSON.parse(bodyInit));
+          const parsedBodyInit = parseJson(bodyInit, requestConfig.bodySchema);
+
+          if (!parsedBodyInit.isSuccess) {
+            return parsedBodyInit;
+          }
         } else {
-          requestConfig.bodySchema.parse(bodyInit);
+          const parsedBodyInit = requestConfig.bodySchema.safeParse(bodyInit);
+
+          if (!parsedBodyInit.success) {
+            return { error: parsedBodyInit.error, isSuccess: false };
+          }
         }
       }
 
       if (!isNil(requestConfig.searchParamSchema)) {
-        requestConfig.searchParamSchema.parse(options?.searchParams);
+        const parsed = requestConfig.searchParamSchema.safeParse(
+          options?.searchParams,
+        );
+
+        if (!parsed.success) {
+          return { error: parsed.error, isSuccess: parsed.success };
+        }
       }
 
       if (
         !isNil(requestConfig.pathVariableLength) &&
         options?.pathVariables?.length !== requestConfig.pathVariableLength
       ) {
-        console.error(
-          `Invalid number of path variables. Expected: ${options?.pathVariables?.length} Received: ${requestConfig.pathVariableLength}`,
-        );
-        delete options?.pathVariables;
+        return {
+          error: new Error(
+            `invalid number of path variables. Expected: ${options?.pathVariables?.length} Received: ${requestConfig.pathVariableLength}`,
+          ),
+          isSuccess: false,
+        };
       }
 
       const builder = urlBuilder(requestConfig.path, {
@@ -97,6 +128,10 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
         urlBase: this.config.baseUrl,
       });
 
+      if (!builder.url.isSuccess) {
+        return builder.url;
+      }
+
       const requestInit = merge(
         {},
         this.config.defaultRequestInit,
@@ -104,7 +139,10 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
         options?.requestInit,
       );
 
-      return new Request(builder.url, requestInit);
+      return {
+        data: new Request(builder.url.data, requestInit),
+        isSuccess: true,
+      };
     };
   }
 }
