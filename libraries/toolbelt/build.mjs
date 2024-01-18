@@ -8,6 +8,7 @@ await projectBuilder('toolbelt', 'main', {
   tsupOptions: {
     format: ['cjs', 'esm'],
     minify: true,
-    outDir: 'dist'
+    outDir: 'dist',
+    entry: ['src']
   }
 })
