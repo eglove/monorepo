@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 
-import { merge } from 'lodash';
+import lodash from 'lodash';
 import { rimraf } from 'rimraf';
 import tsup from 'tsup';
 
@@ -24,7 +24,7 @@ export async function buildProject(
       tsConfigString,
     ) as typeof tsConfigOverrides;
 
-    const merged = merge(originalTsConfig, tsConfigOverrides);
+    const merged = lodash.merge(originalTsConfig, tsConfigOverrides);
     fs.writeFileSync('tsconfig.build.json', JSON.stringify(merged, null, 2));
 
     await gitUpdate('Generate tsConfig');

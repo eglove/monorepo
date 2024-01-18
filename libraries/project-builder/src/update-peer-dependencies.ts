@@ -1,5 +1,5 @@
 import * as fs from 'node:fs';
-import { isNil } from 'lodash';
+import lodash from 'lodash';
 
 import { gitUpdate } from './git-update.ts';
 
@@ -17,7 +17,7 @@ export async function updatePeerDependencies(
     ...packageObject.dependencies,
   };
 
-  if (!isNil(ignorePeerDependencies)) {
+  if (!lodash.isNil(ignorePeerDependencies)) {
     for (const ignorePeerDependency of ignorePeerDependencies) {
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete packageObject.peerDependencies[ignorePeerDependency];

@@ -8,7 +8,7 @@ import { updatePeerDependencies } from './update-peer-dependencies.ts';
 import { getHasChanges } from './util.ts';
 import type { scripts } from './version-bump.ts';
 import { versionBump } from './version-bump.ts';
-import { isNil } from 'lodash';
+import lodash from 'lodash';
 
 type ProjectBuilderProperties = {
   ignorePeerDependencies?: string[];
@@ -51,8 +51,8 @@ export async function projectBuilder(
 
     if (
       (await getHasChanges(branch)) &&
-      !isNil(publishDirectory) &&
-      !isNil(tsupOptions)
+      !lodash.isNil(publishDirectory) &&
+      !lodash.isNil(tsupOptions)
     ) {
       await buildProject(publishDirectory, tsupOptions, tsConfigOverrides);
     }
