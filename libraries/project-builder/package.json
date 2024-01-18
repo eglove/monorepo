@@ -1,0 +1,32 @@
+{
+  "name": "@ethang/project-builder",
+  "version": "1.1.16",
+  "description": "",
+  "license": "ISC",
+  "author": "Ethan Glover",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint . --fix"
+  },
+  "eslintConfig": {
+    "extends": "ethang",
+    "rules": {
+      "unicorn/prefer-json-parse-buffer": "off"
+    }
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.7",
+    "@types/lodash": "^4.14.202",
+    "@types/node": "^20.11.5",
+    "eslint-config-ethang": "^12.0.2"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "inquirer": "^9.2.12",
+    "lodash": "^4.17.21",
+    "rimraf": "^5.0.5",
+    "simple-git": "^3.22.0",
+    "tsup": "^8.0.1"
+  }
+}
