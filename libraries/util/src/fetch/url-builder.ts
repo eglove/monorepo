@@ -1,10 +1,10 @@
-import { forEach, isEmpty, isNil, isObject, isString } from 'lodash';
+import { forEach, isNil, isObject, isString } from 'lodash';
 
 import { tryCatch } from '../functional/try-catch.ts';
 import type { HandledError } from '../types/error.js';
 
 export type UrlConfig = {
-  pathVariables?: Array<string | number>;
+  pathVariables?: Record<string, string | number>;
   searchParams?: string | Record<string, unknown>;
   urlBase?: string | URL;
 };
@@ -12,13 +12,13 @@ export type UrlConfig = {
 class UrlBuilder {
   private _url: string | URL;
   private readonly searchParameters: URLSearchParams;
-  private readonly pathVariables: Array<string | number | undefined>;
+  private readonly pathVariables?: Record<string, string | number>;
   private readonly _config: UrlConfig | undefined;
 
   public constructor(urlString: string | URL, config?: UrlConfig) {
     this._url = urlString;
     this._config = config;
-    this.pathVariables = config?.pathVariables ?? [];
+    this.pathVariables = config?.pathVariables;
     this.searchParameters = this.buildSearchParameters(config?.searchParams);
   }
 
@@ -38,25 +38,25 @@ class UrlBuilder {
 
   private buildUrl(): HandledError<URL, Error> {
     let urlString = this._url.toString();
-    this._url = new URL(urlString, this._config?.urlBase);
 
-    if (!isEmpty(this.pathVariables)) {
-      for (const pathVariable of this.pathVariables) {
-        if (pathVariable !== undefined) {
-          urlString += `${pathVariable}/`;
-        }
+    forEach(this.pathVariables, (variable, key) => {
+      if (urlString.includes(':')) {
+        urlString = urlString.replaceAll(
+          new RegExp(':' + key, 'g'),
+          String(variable),
+        );
       }
+    });
 
-      const url = tryCatch(() => {
-        return new URL(urlString);
-      });
+    const url = tryCatch(() => {
+      return new URL(urlString, this._config?.urlBase);
+    });
 
-      if (!url.isSuccess) {
-        return { error: url.error, isSuccess: false };
-      }
-
-      this._url = new URL(urlString);
+    if (!url.isSuccess) {
+      return { error: url.error, isSuccess: false };
     }
+
+    this._url = url.data;
 
     if (this.searchParameters.size > 0) {
       for (const [key, value] of this.searchParameters.entries()) {

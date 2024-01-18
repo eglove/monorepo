@@ -22,20 +22,13 @@ describe('api setup', () => {
       },
     });
 
-    // @ts-expect-error allow private read
-    expect(testApi.config.baseUrl).toBe('http://example.com');
-    // @ts-expect-error allow private read
-    expect(testApi.config.cacheInterval).toBe(100);
-    // @ts-expect-error allow private read
-    expect(testApi.config.defaultRequestInit).toStrictEqual({
-      method: 'GET',
-    });
-
     const request = testApi.request.search({
       requestInit: { body: { name: 'abc' } },
     });
 
     if (request.isSuccess) {
+      expect(new URL(request.data.url).host).toBe('example.com');
+      expect(request.data.method).toBe('POST');
       expect(request.isSuccess).toBe(true);
       expect(request.data.url).toBe('http://example.com/search');
     }
@@ -57,16 +50,32 @@ describe('api setup', () => {
     const todosApi = new Api({
       baseUrl: 'https://jsonplaceholder.typicode.com',
       requests: {
-        todos: {
-          path: 'todos',
+        todo: {
+          path: 'todos/:todoId/users/:userId',
+          pathVariableLength: 2,
         },
       },
     });
 
+    const todoRequest = todosApi.request.todo({
+      pathVariables: {
+        todoId: 1,
+        userId: 3,
+      },
+    });
+
+    expect(todoRequest.isSuccess).toBe(true);
+
+    if (todoRequest.isSuccess) {
+      expect(todoRequest.data.url).toBe(
+        'https://jsonplaceholder.typicode.com/todos/1/users/3',
+      );
+    }
+
     // eslint-disable-next-line functional/immutable-data
     globalThis.fetch = mockFetch;
-    const response = await todosApi.fetch.todos({
-      pathVariables: ['1'],
+    const response = await todosApi.fetch.todo({
+      pathVariables: { id: 1 },
       searchParams: { hey: undefined },
     });
 

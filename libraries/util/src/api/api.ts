@@ -1,4 +1,4 @@
-import { isNil, merge } from 'lodash';
+import { isNil, keys, merge } from 'lodash';
 import type { z, ZodSchema } from 'zod';
 
 import { fetcher } from '../fetch/fetcher.ts';
@@ -23,7 +23,7 @@ type ApiConfig<T extends Record<string, Readonly<RequestConfig>>> = {
 };
 
 type RequestOptions = {
-  pathVariables?: Array<string | number>;
+  pathVariables?: Record<string, string | number>;
   requestInit?: RequestInit | Record<string, unknown>;
   searchParams?: Record<string, string | number | undefined>;
 };
@@ -112,7 +112,8 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
 
       if (
         !isNil(requestConfig.pathVariableLength) &&
-        options?.pathVariables?.length !== requestConfig.pathVariableLength
+        keys(options?.pathVariables)?.length !==
+          requestConfig.pathVariableLength
       ) {
         return {
           error: new Error(
