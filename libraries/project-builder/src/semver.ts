@@ -26,7 +26,7 @@ export async function semver(publishDirectory?: string) {
 
   runCommand(`npm version ${semver}`);
 
-  if (publishDirectory === undefined) {
+  if (isNil(publishDirectory)) {
     runCommand('npm publish --access public');
   } else {
     fs.copyFileSync('package.json', `${publishDirectory}/package.json`);
