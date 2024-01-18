@@ -1,5 +1,4 @@
 import type { z } from 'zod';
-import { ZodError } from 'zod';
 
 import { tryCatchAsync } from '../functional/try-catch.ts';
 import type { HandledError } from '../types/error.js';
@@ -14,19 +13,7 @@ export async function parseJson<Z extends ZodValidator>(
   });
 
   if (!unparsed.isSuccess) {
-    const { error, isSuccess } = unparsed;
-
-    if (error instanceof ZodError) {
-      return {
-        error,
-        isSuccess,
-      };
-    }
-
-    return {
-      error: new Error('failed to parse json'),
-      isSuccess,
-    };
+    return unparsed;
   }
 
   const parsed = responseSchema.safeParse(unparsed);
