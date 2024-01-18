@@ -1,6 +1,5 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
-
-import { animationInterval } from './use-animdation-interval';
+import { animationInterval } from './use-animation-interval';
 
 type UseDimensionsReturn = {
   dimensions: DOMRect | Record<string, unknown>;
