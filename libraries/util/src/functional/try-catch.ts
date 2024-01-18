@@ -1,23 +1,30 @@
 import type { HandledError } from '../types/error.js';
 
-export function tryCatch<T extends () => ReturnType<T>, E extends Error>(
+export function tryCatch<T extends () => ReturnType<T>>(
   function_: T,
-): HandledError<ReturnType<T>, E> {
+): HandledError<ReturnType<T>, Error> {
   try {
     return { data: function_(), isSuccess: true };
   } catch (error: unknown) {
-    return { error: error as E, isSuccess: false };
+    if (error instanceof Error) {
+      return { error, isSuccess: false };
+    }
+
+    return { error: new Error(`${function_.name} failed`), isSuccess: false };
   }
 }
 
 export async function tryCatchAsync<
   T extends () => Promise<Awaited<ReturnType<T>>>,
-  E extends Error,
->(function_: T): Promise<HandledError<Awaited<ReturnType<T>>, E>> {
+>(function_: T): Promise<HandledError<Awaited<ReturnType<T>>, Error>> {
   try {
     const data = await function_();
     return { data, isSuccess: true };
   } catch (error) {
-    return { error: error as E, isSuccess: false };
+    if (error instanceof Error) {
+      return { error, isSuccess: false };
+    }
+
+    return { error: new Error(`${function_.name} failed`), isSuccess: false };
   }
 }

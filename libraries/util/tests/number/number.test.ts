@@ -28,6 +28,7 @@ describe('BetterNumber', () => {
   });
 
   it('should use navigators language when undefined', () => {
+    // eslint-disable-next-line functional/immutable-data
     Object.defineProperty(globalThis, 'navigator', {
       value: {
         language: 'fr',
