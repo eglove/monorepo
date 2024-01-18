@@ -8,7 +8,9 @@ export async function parseResponseJson<Z extends ZodValidator>(
   response: Response,
   responseSchema: Z,
 ): Promise<HandledError<z.output<Z>, Error | z.ZodError<Z>>> {
-  const unparsed = await tryCatchAsync(() => response.json());
+  const unparsed = await tryCatchAsync(() => {
+    return response.json();
+  });
 
   if (!unparsed.isSuccess) {
     return unparsed;

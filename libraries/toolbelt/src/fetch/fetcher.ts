@@ -49,7 +49,9 @@ class Fetcher {
 
   public async fetch(): Promise<HandledError<Response | undefined, Error>> {
     if (!isBrowser || isNil(this._cacheInterval) || this._cacheInterval <= 0) {
-      return tryCatchAsync(() => fetch(this._request));
+      return tryCatchAsync(() => {
+        return fetch(this._request);
+      });
     }
 
     const cache = await caches.open(this._cacheKey);
@@ -103,8 +105,8 @@ class Fetcher {
 
   private readonly getRequestDatabase = async (): Promise<
     IDBPDatabase<unknown>
-  > =>
-    openDB(Fetcher._DB_NAME, 1, {
+  > => {
+    return openDB(Fetcher._DB_NAME, 1, {
       upgrade(database_) {
         const store = database_.createObjectStore(Fetcher._DB_NAME, {
           keyPath: Fetcher._DB_KEY,
@@ -112,6 +114,7 @@ class Fetcher {
         store.createIndex(Fetcher._DB_KEY, Fetcher._DB_KEY);
       },
     });
+  };
 }
 
 export function fetcher(options: FetcherOptions) {

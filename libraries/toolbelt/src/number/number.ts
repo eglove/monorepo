@@ -121,4 +121,6 @@ export const betterNumber = (
   number: unknown,
   locale?: string,
   formatOptions?: FormatOptions,
-): BetterNumber => new BetterNumber(number, locale, formatOptions);
+): BetterNumber => {
+  return new BetterNumber(number, locale, formatOptions);
+};

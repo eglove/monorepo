@@ -65,7 +65,6 @@ describe('BetterNumber', () => {
   });
 
   it('should return undefined when number is null', () => {
-    // eslint-disable-next-line unicorn/no-null
     const height = betterNumber(null, 'en-US');
 
     expect(height.number).toBe(undefined);
