@@ -72,7 +72,6 @@ describe('api setup', () => {
       );
     }
 
-    // eslint-disable-next-line functional/immutable-data
     globalThis.fetch = mockFetch;
     const response = await todosApi.fetch.todo({
       pathVariables: { id: 1 },

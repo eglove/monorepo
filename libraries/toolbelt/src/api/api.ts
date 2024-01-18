@@ -64,7 +64,7 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
   }
 
   private generateFetchMethod(key: string): FetchFunction {
-    return (options?: FetchOptions) => {
+    return async (options?: FetchOptions) => {
       const request = this.request[key](options);
 
       if (!request.isSuccess) {

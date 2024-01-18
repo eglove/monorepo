@@ -48,9 +48,7 @@ class UrlBuilder {
       }
     });
 
-    const url = tryCatch(() => {
-      return new URL(urlString, this._config?.urlBase);
-    });
+    const url = tryCatch(() => new URL(urlString, this._config?.urlBase));
 
     if (!url.isSuccess) {
       return { error: url.error, isSuccess: false };

@@ -7,6 +7,7 @@ describe('number', () => {
     [0 / 0, false],
     ['not a number', false],
     [undefined, false],
+    // eslint-disable-next-line unicorn/no-null
     [null, false],
     ['2', true],
     [2, true],

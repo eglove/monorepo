@@ -1,5 +1,5 @@
 {
-  "name": "@ethang/util",
+  "name": "@ethang/toolbelt",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Ethan Glover",
@@ -8,6 +8,9 @@
   "scripts": {
     "lint": "eslint . --fix",
     "test": "vitest run"
+  },
+  "eslintConfig": {
+    "extends": "ethang"
   },
   "dependencies": {
     "@total-typescript/ts-reset": "^0.5.1",
@@ -19,7 +22,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.11.5",
-    "eslint-config-ethang": "^11.7.13",
+    "eslint-config-ethang": "^12.0.0",
     "ts-toolbelt": "^9.6.0",
     "vitest": "^1.2.1"
   }

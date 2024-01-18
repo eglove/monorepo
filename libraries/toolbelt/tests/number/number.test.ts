@@ -28,7 +28,6 @@ describe('BetterNumber', () => {
   });
 
   it('should use navigators language when undefined', () => {
-    // eslint-disable-next-line functional/immutable-data
     Object.defineProperty(globalThis, 'navigator', {
       value: {
         language: 'fr',
@@ -66,6 +65,7 @@ describe('BetterNumber', () => {
   });
 
   it('should return undefined when number is null', () => {
+    // eslint-disable-next-line unicorn/no-null
     const height = betterNumber(null, 'en-US');
 
     expect(height.number).toBe(undefined);
