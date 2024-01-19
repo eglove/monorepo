@@ -1,5 +1,5 @@
 import { isNil, keys, merge } from 'lodash';
-import type { z, ZodSchema } from 'zod';
+import { z, ZodSchema } from 'zod';
 
 import { fetcher } from '../fetch/fetcher.ts';
 import { urlBuilder } from '../fetch/url-builder.ts';
@@ -33,6 +33,7 @@ type RequestFunction = (
 ) => HandledError<Request, z.ZodError | Error>;
 
 type FetchOptions = RequestOptions & { cacheInterval?: number };
+
 type FetchFunction = (
   options?: FetchOptions,
 ) =>
@@ -43,12 +44,12 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
   private readonly config: ApiConfig<T>;
   private readonly globalCacheInterval: number;
 
-  // @ts-expect-error generated in constructor
+  // @ts-expect-error initialized in constructor
   public readonly request: {
     [K in keyof T]: RequestFunction;
   } = {};
 
-  // @ts-expect-error generated in constructor
+  // @ts-expect-error initialized in constructor
   public readonly fetch: {
     [K in keyof T]: FetchFunction;
   } = {};

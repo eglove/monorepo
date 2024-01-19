@@ -5,6 +5,12 @@ await projectBuilder('toolbelt', 'main', {
   postVersionBumpScripts: ['DEDUPE', 'LINT'],
   publishDirectory: 'dist',
   isLibrary: true,
+  tsConfigOverrides: {
+    include: ['src'],
+    compilerOptions: {
+      emitDeclarationOnly: true,
+    }
+  },
   tsupOptions: {
     format: ['cjs', 'esm'],
     minify: true,
