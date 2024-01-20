@@ -1,18 +1,18 @@
 import { isNil, keys, merge } from 'lodash';
-import { z, ZodSchema } from 'zod';
+import { z } from 'zod';
 
 import { fetcher } from '../fetch/fetcher.ts';
 import { urlBuilder } from '../fetch/url-builder.ts';
 import { parseJson } from '../json/json.ts';
 import type { HandledError } from '../types/error.js';
-import type { ZodValidator } from '../types/zod-validator.js';
+import { ZodValidator } from '../types/zod-validator.ts';
 
 type RequestConfig = {
-  bodySchema?: ZodSchema;
+  bodySchema?: ZodValidator;
   defaultRequestInit?: RequestInit;
   path: string;
   pathVariableLength?: number;
-  searchParamSchema?: ZodSchema;
+  searchParamSchema?: ZodValidator;
 };
 
 type ApiConfig<T extends Record<string, Readonly<RequestConfig>>> = {
