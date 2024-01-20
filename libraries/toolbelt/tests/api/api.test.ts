@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from 'vitest';
 import { z } from 'zod';
+
 import { Api } from '../../src/api/api.ts';
 
 describe('api setup', () => {

@@ -4,9 +4,12 @@ import type { HandledError } from '../types/error.js';
 
 export function getCookieValue(
   cookieName: string,
-  requestHeaders: Headers,
+  cookieSource: Headers | string,
 ): HandledError<string, Error> {
-  const cookies = requestHeaders.get('Cookie');
+  const cookies =
+    typeof cookieSource === 'string'
+      ? cookieSource
+      : cookieSource.get('Cookie');
 
   if (isNil(cookies)) {
     return { error: new Error('cookies not found'), isSuccess: false };

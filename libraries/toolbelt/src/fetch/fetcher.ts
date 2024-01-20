@@ -57,7 +57,17 @@ class Fetcher {
     const requestKey = this.getRequestKey();
     const database = await this.getRequestDatabase();
 
-    if (await this.isExpired()) {
+    if (!database.isSuccess) {
+      return database;
+    }
+
+    const expired = await this.isExpired();
+
+    if (!expired.isSuccess) {
+      return expired;
+    }
+
+    if (expired.data) {
       await cache.delete(this._request);
     }
 
@@ -69,15 +79,23 @@ class Fetcher {
     const expires = new Date();
     expires.setSeconds(expires.getSeconds() + (this._cacheInterval ?? 0));
 
-    await Promise.all([
-      cache.add(this._request),
-      database
-        .transaction(Fetcher._DB_NAME, 'readwrite')
-        .objectStore(Fetcher._DB_NAME)
-        .put({ expires, key: requestKey } satisfies RequestMeta),
-    ]);
+    const results = await tryCatchAsync(() => {
+      return Promise.all([
+        cache.add(this._request),
+        database.data
+          .transaction(Fetcher._DB_NAME, 'readwrite')
+          .objectStore(Fetcher._DB_NAME)
+          .put({ expires, key: requestKey } satisfies RequestMeta),
+      ]);
+    });
 
-    return { data: await cache.match(this._request), isSuccess: true };
+    if (!results.isSuccess) {
+      return results;
+    }
+
+    return tryCatchAsync(() => {
+      return cache.match(this._request);
+    });
   }
 
   public getRequestKey() {
@@ -86,30 +104,37 @@ class Fetcher {
     }`;
   }
 
-  public async isExpired() {
+  public async isExpired(): Promise<HandledError<boolean, Error>> {
     const database = await this.getRequestDatabase();
+
+    if (!database.isSuccess) {
+      return database;
+    }
+
     const requestKey = this.getRequestKey();
 
-    const cachedMeta = (await database
+    const cachedMeta = (await database.data
       .transaction(Fetcher._DB_NAME, 'readonly')
       .objectStore(Fetcher._DB_NAME)
       .get(requestKey)) as RequestMeta | undefined;
 
     if (cachedMeta === undefined) {
-      return true;
+      return { data: true, isSuccess: true };
     }
 
-    return new Date() >= cachedMeta.expires;
+    return { data: new Date() >= cachedMeta.expires, isSuccess: true };
   }
 
   private readonly getRequestDatabase = async () => {
-    return openDB<typeof Fetcher._DB_NAME>(Fetcher._DB_NAME, 1, {
-      upgrade(database_) {
-        const store = database_.createObjectStore(Fetcher._DB_NAME, {
-          keyPath: Fetcher._DB_KEY,
-        });
-        store.createIndex(Fetcher._DB_KEY, Fetcher._DB_KEY);
-      },
+    return tryCatchAsync(() => {
+      return openDB<typeof Fetcher._DB_NAME>(Fetcher._DB_NAME, 1, {
+        upgrade(database_) {
+          const store = database_.createObjectStore(Fetcher._DB_NAME, {
+            keyPath: Fetcher._DB_KEY,
+          });
+          store.createIndex(Fetcher._DB_KEY, Fetcher._DB_KEY);
+        },
+      });
     });
   };
 }

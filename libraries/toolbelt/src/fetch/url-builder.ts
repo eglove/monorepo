@@ -40,11 +40,27 @@ class UrlBuilder {
     let urlString = this._url.toString();
 
     forEach(this.pathVariables, (variable, key) => {
-      if (urlString.includes(':')) {
-        urlString = urlString.replaceAll(
-          new RegExp(':' + key, 'g'),
-          String(variable),
-        );
+      const includesColon = tryCatch(() => {
+        return urlString.includes(':');
+      });
+
+      if (!includesColon.isSuccess) {
+        return includesColon;
+      }
+
+      if (includesColon.data) {
+        const replaced = tryCatch(() => {
+          return urlString.replaceAll(
+            new RegExp(':' + key, 'g'),
+            String(variable),
+          );
+        });
+
+        if (!replaced.isSuccess) {
+          return replaced;
+        }
+
+        urlString = replaced.data;
       }
     });
 
@@ -53,7 +69,7 @@ class UrlBuilder {
     });
 
     if (!url.isSuccess) {
-      return { error: url.error, isSuccess: false };
+      return url;
     }
 
     this._url = url.data;
@@ -67,9 +83,7 @@ class UrlBuilder {
     return { data: this._url, isSuccess: true };
   }
 
-  private buildSearchParameters(
-    parameters: UrlConfig['searchParams'],
-  ): URLSearchParams {
+  private buildSearchParameters(parameters: UrlConfig['searchParams']) {
     let searchParameters = new URLSearchParams();
 
     if (isString(parameters)) {
