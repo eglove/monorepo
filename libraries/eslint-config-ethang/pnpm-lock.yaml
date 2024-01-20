@@ -80,8 +80,8 @@ dependencies:
 
 devDependencies:
   '@ethang/project-builder':
-    specifier: ^1.1.16
-    version: 1.1.16(@ethang/util@3.1.1)(chalk@5.3.0)(inquirer@9.2.12)(rimraf@5.0.5)(simple-git@3.22.0)(tsup@8.0.1)(typescript@5.3.3)
+    specifier: ^1.1.17
+    version: 1.1.17(chalk@5.3.0)(inquirer@9.2.12)(lodash@4.17.21)(rimraf@5.0.5)(simple-git@3.22.0)(tsup@8.0.1)
 
 packages:
 
@@ -372,28 +372,22 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: false
 
-  /@ethang/project-builder@1.1.16(@ethang/util@3.1.1)(chalk@5.3.0)(inquirer@9.2.12)(rimraf@5.0.5)(simple-git@3.22.0)(tsup@8.0.1)(typescript@5.3.3):
-    resolution: {integrity: sha512-k3XIth698LsVQUmR2a38Pq6ytHX2RqTIzg9A0Wm/WaXGo458riMhFBbw42bW/Pzjp70t5zBTJUzfMZwnWFmG1Q==}
+  /@ethang/project-builder@1.1.17(chalk@5.3.0)(inquirer@9.2.12)(lodash@4.17.21)(rimraf@5.0.5)(simple-git@3.22.0)(tsup@8.0.1):
+    resolution: {integrity: sha512-kN9wVku+HI8NN/V55TJQKp1Aogy7LoM4k6lEJIxOpyPZd6REA+syyTTeG6LL4b65hzpdopUqnopynSYdd6oexg==}
     peerDependencies:
-      '@ethang/util': ^3.1.1
       chalk: ^5.3.0
       inquirer: ^9.2.12
+      lodash: ^4.17.21
       rimraf: ^5.0.5
       simple-git: ^3.22.0
       tsup: ^8.0.1
-      typescript: ^5.3.3
     dependencies:
-      '@ethang/util': 3.1.1
       chalk: 5.3.0
       inquirer: 9.2.12
+      lodash: 4.17.21
       rimraf: 5.0.5
       simple-git: 3.22.0
       tsup: 8.0.1(postcss@8.4.33)(typescript@5.3.3)
-      typescript: 5.3.3
-    dev: true
-
-  /@ethang/util@3.1.1:
-    resolution: {integrity: sha512-xr1t/+RnaZ89+CdOe9tZ4rEekkDyTwe6nFeJv7DMDj3GTCWpE8TtYqoG4VoG0j7AFX1wLbnbb5QVCwjJgIV24w==}
     dev: true
 
   /@humanwhocodes/config-array@0.11.14:
@@ -433,7 +427,7 @@ packages:
     dependencies:
       '@jridgewell/set-array': 1.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
-      '@jridgewell/trace-mapping': 0.3.21
+      '@jridgewell/trace-mapping': 0.3.22
 
   /@jridgewell/resolve-uri@3.1.1:
     resolution: {integrity: sha512-dSYZh7HhCDtCKm4QakX0xFpsRDqjjtZf/kjI/v3T3Nwt5r8/qz/M19F9ySyOqU94SXBmeG9ttTul+YnR4LOxFA==}
@@ -446,8 +440,8 @@ packages:
   /@jridgewell/sourcemap-codec@1.4.15:
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
 
-  /@jridgewell/trace-mapping@0.3.21:
-    resolution: {integrity: sha512-SRfKmRe1KvYnxjEMtxEr+J4HIeMX5YBg/qhRHpxEIGjhX1rshcHlnFUE9K0GazhVKWM7B+nARSkV8LuvJdJ5/g==}
+  /@jridgewell/trace-mapping@0.3.22:
+    resolution: {integrity: sha512-Wf963MzWtA2sjrNt+g18IAln9lKnlRp+K2eH4jjIoF1wYeq3aMREpG09xhlhdzS0EjwU7qmUJYangWa+151vZw==}
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
