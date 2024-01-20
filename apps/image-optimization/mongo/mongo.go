@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -32,4 +33,8 @@ func ImageOptimization() *mongo.Database {
 
 func ImageCollection() *mongo.Collection {
 	return ImageOptimization().Collection("images")
+}
+
+func ImageGridFs() (*gridfs.Bucket, error) {
+	return gridfs.NewBucket(ImageOptimization())
 }

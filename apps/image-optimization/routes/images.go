@@ -9,6 +9,34 @@ import (
 	"strings"
 )
 
+func imageByFilename(context *gin.Context) {
+	filename := context.Param("filename")
+	widthStr := context.Query("w")
+	heightStr := context.Query("h")
+
+	var imageModel models.Image
+	errorMap := utils.NewErrorMap()
+
+	image, err := imageModel.Get(filename)
+	if err != nil {
+		errorMap["Image.Name"] = "failed to find image"
+		context.JSON(http.StatusNotFound, utils.NewResponseData(errorMap, nil))
+		return
+	}
+
+	resized, err := utils.ResizeImage(image.Bytes(), widthStr, heightStr)
+
+	if err != nil {
+		errorMap["Image"] = "failed to resize image"
+		context.JSON(http.StatusNotFound, utils.NewResponseData(errorMap, nil))
+		return
+	}
+
+	contentType := http.DetectContentType(resized)
+	context.Header("Content-Type", contentType)
+	context.Data(http.StatusOK, contentType, resized)
+}
+
 func createImage(context *gin.Context) {
 	var imageModel models.Image
 	var imageRequestModel models.CreateImageRequest
@@ -75,6 +103,7 @@ func createImage(context *gin.Context) {
 	imageModel.Width = int64(img.Bounds().Dx())
 	imageModel.Height = int64(img.Bounds().Dy())
 	imageModel.Quality = 100
+	imageModel.Url = context.Request.Host + context.Request.URL.String() + imageModel.Name
 
 	// Save image
 	savedImage, err := imageModel.Save()
