@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import lodash from 'lodash';
 import { simpleGit } from 'simple-git';
 import type tsup from 'tsup';
 
@@ -8,7 +9,6 @@ import { updatePeerDependencies } from './update-peer-dependencies.ts';
 import { getHasChanges } from './util.ts';
 import type { scripts } from './version-bump.ts';
 import { versionBump } from './version-bump.ts';
-import lodash from 'lodash';
 
 type ProjectBuilderProperties = {
   ignorePeerDependencies?: string[];
