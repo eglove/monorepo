@@ -20,10 +20,10 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@ethang/project-builder": "^1.1.17",
+    "@ethang/project-builder": "^1.1.18",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.11.5",
-    "eslint-config-ethang": "^12.0.5",
+    "eslint-config-ethang": "^12.0.6",
     "ts-toolbelt": "^9.6.0",
     "vitest": "^1.2.1"
   },

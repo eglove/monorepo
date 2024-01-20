@@ -1,45 +1,18 @@
 import { isNil, keys, merge } from 'lodash';
-import type { z } from 'zod';
 
 import { fetcher } from '../fetch/fetcher.ts';
 import { urlBuilder } from '../fetch/url-builder.ts';
 import { parseJson } from '../json/json.ts';
 import type { HandledError } from '../types/error.js';
-import type { ZodValidator } from '../types/zod-validator.ts';
-
-type RequestConfig = {
-  bodySchema?: ZodValidator;
-  defaultRequestInit?: RequestInit;
-  path: string;
-  pathVariableLength?: number;
-  responseSchema?: ZodValidator;
-  searchParamSchema?: ZodValidator;
-};
-
-type ApiConfig<T extends Record<string, Readonly<RequestConfig>>> = {
-  baseUrl: string;
-  cacheInterval?: number;
-  defaultRequestInit?: RequestInit;
-  requests: T;
-};
-
-type RequestOptions = {
-  pathVariables?: Record<string, string | number>;
-  requestInit?: RequestInit | Record<string, unknown>;
-  searchParams?: Record<string, string | number | undefined>;
-};
-
-type RequestFunction = (
-  options?: RequestOptions,
-) => HandledError<Request, z.ZodError | Error>;
-
-type FetchOptions = RequestOptions & { cacheInterval?: number };
-
-type FetchFunction = (
-  options?: FetchOptions,
-) =>
-  | Promise<HandledError<Response | undefined, Error>>
-  | HandledError<Response | undefined, Error | z.ZodError>;
+import type {
+  ApiConfig,
+  FetchFunction,
+  FetchOptions,
+  RequestConfig,
+  RequestFunction,
+  RequestOptions,
+} from './api-types.js';
+import type { Validate } from './validate-types.js';
 
 export class Api<T extends Record<string, Readonly<RequestConfig>>> {
   private readonly config: ApiConfig<T>;
@@ -83,46 +56,29 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
   private generateRequestMethod(key: string): RequestFunction {
     const requestConfig = this.config.requests[key];
 
-    return (options?: RequestOptions) => {
-      if (!isNil(requestConfig.bodySchema)) {
-        const bodyInit = options?.requestInit?.body;
+    return (options?: RequestOptions): HandledError<Request, Error> => {
+      const bodyValidation = this.validateBody(requestConfig, options);
 
-        if (typeof bodyInit === 'string') {
-          const parsedBodyInit = parseJson(bodyInit, requestConfig.bodySchema);
-
-          if (!parsedBodyInit.isSuccess) {
-            return parsedBodyInit;
-          }
-        } else {
-          const parsedBodyInit = requestConfig.bodySchema.safeParse(bodyInit);
-
-          if (!parsedBodyInit.success) {
-            return { error: parsedBodyInit.error, isSuccess: false };
-          }
-        }
+      if (!bodyValidation?.isSuccess) {
+        return bodyValidation;
       }
 
-      if (!isNil(requestConfig.searchParamSchema)) {
-        const parsed = requestConfig.searchParamSchema.safeParse(
-          options?.searchParams,
-        );
+      const searchParametersValidation = this.validateSearchParams(
+        requestConfig,
+        options,
+      );
 
-        if (!parsed.success) {
-          return { error: parsed.error, isSuccess: parsed.success };
-        }
+      if (!searchParametersValidation.isSuccess) {
+        return searchParametersValidation;
       }
 
-      if (
-        !isNil(requestConfig.pathVariableLength) &&
-        keys(options?.pathVariables)?.length !==
-          requestConfig.pathVariableLength
-      ) {
-        return {
-          error: new Error(
-            `invalid number of path variables. Expected: ${options?.pathVariables?.length} Received: ${requestConfig.pathVariableLength}`,
-          ),
-          isSuccess: false,
-        };
+      const pathVariableValidation = this.validatePathVariables(
+        requestConfig,
+        options,
+      );
+
+      if (!pathVariableValidation.isSuccess) {
+        return pathVariableValidation;
       }
 
       const builder = urlBuilder(requestConfig.path, {
@@ -147,5 +103,66 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
         isSuccess: true,
       };
     };
+  }
+
+  private validateBody(
+    requestConfig: RequestConfig,
+    options?: RequestOptions,
+  ): Validate<typeof requestConfig.bodySchema> {
+    if (!isNil(requestConfig.bodySchema)) {
+      const bodyInit = options?.requestInit?.body;
+
+      if (typeof bodyInit === 'string') {
+        return parseJson(bodyInit, requestConfig.bodySchema);
+      }
+
+      const parsedBodyInit = requestConfig.bodySchema.safeParse(bodyInit);
+
+      if (!parsedBodyInit.success) {
+        return { error: parsedBodyInit.error, isSuccess: false };
+      }
+
+      return { data: parsedBodyInit.data, isSuccess: true };
+    }
+
+    return { data: undefined, isSuccess: true };
+  }
+
+  private validateSearchParams(
+    requestConfig: RequestConfig,
+    options?: RequestOptions,
+  ): Validate<typeof requestConfig.searchParamSchema> {
+    if (!isNil(requestConfig.searchParamSchema)) {
+      const parsed = requestConfig.searchParamSchema.safeParse(
+        options?.searchParams,
+      );
+
+      if (!parsed.success) {
+        return { error: parsed.error, isSuccess: parsed.success };
+      }
+
+      return { data: parsed.data, isSuccess: true };
+    }
+
+    return { data: undefined, isSuccess: true };
+  }
+
+  private validatePathVariables(
+    requestConfig: RequestConfig,
+    options?: RequestOptions,
+  ): HandledError<undefined, Error> {
+    if (
+      !isNil(requestConfig.pathVariableLength) &&
+      keys(options?.pathVariables)?.length !== requestConfig.pathVariableLength
+    ) {
+      return {
+        error: new Error(
+          `invalid number of path variables. Expected: ${options?.pathVariables?.length} Received: ${requestConfig.pathVariableLength}`,
+        ),
+        isSuccess: false,
+      };
+    }
+
+    return { data: undefined, isSuccess: true };
   }
 }
