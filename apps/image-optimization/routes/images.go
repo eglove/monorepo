@@ -9,6 +9,61 @@ import (
 	"strings"
 )
 
+type ImageInfo struct {
+	Src         string `json:"src"`
+	Alt         string `json:"alt"`
+	Width       int    `json:"width"`
+	Height      int    `json:"height"`
+	AspectRatio string `json:"aspectRatio"`
+	SrcSet      string `json:"srcSet"`
+	Sizes       string `json:"sizes"`
+}
+
+func imageInfoByFilename(context *gin.Context) {
+	filename := context.Param("filename")
+	var info ImageInfo
+
+	var imageModel models.Image
+	errorMap := utils.NewErrorMap()
+
+	imageObject, err := imageModel.Get(filename)
+	if err != nil {
+		errorMap["Image.Name"] = "failed to find image"
+		context.JSON(http.StatusNotFound, utils.NewResponseData(errorMap, nil))
+		return
+	}
+
+	image, err := imageObject.GetFile(filename)
+	if err != nil {
+		errorMap["Image.Name"] = "failed to find image"
+		context.JSON(http.StatusNotFound, utils.NewResponseData(errorMap, nil))
+		return
+	}
+
+	ratio, err := utils.AspectRatio(image.Bytes())
+	if err != nil {
+		errorMap["Image.AspectRatio"] = "failed to get aspect ratio"
+		context.JSON(http.StatusNotFound, utils.NewResponseData(errorMap, nil))
+		return
+	}
+
+	width, height, err := utils.WidthHeight(image.Bytes())
+	if err != nil {
+		errorMap["Image.Dimensions"] = "failed to get image dimensions"
+		context.JSON(http.StatusNotFound, utils.NewResponseData(errorMap, nil))
+		return
+	}
+
+	info.Src = imageObject.Url
+	info.Alt = imageObject.Description
+	info.SrcSet = utils.SrcSet(imageObject.Url)
+	info.Sizes = utils.Sizes()
+	info.AspectRatio = ratio
+	info.Width = width
+	info.Height = height
+	context.JSON(http.StatusOK, utils.NewResponseData(nil, info))
+}
+
 func imageByFilename(context *gin.Context) {
 	filename := context.Param("filename")
 	widthStr := context.Query("w")
@@ -17,7 +72,7 @@ func imageByFilename(context *gin.Context) {
 	var imageModel models.Image
 	errorMap := utils.NewErrorMap()
 
-	image, err := imageModel.Get(filename)
+	image, err := imageModel.GetFile(filename)
 	if err != nil {
 		errorMap["Image.Name"] = "failed to find image"
 		context.JSON(http.StatusNotFound, utils.NewResponseData(errorMap, nil))

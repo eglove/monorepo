@@ -28,6 +28,19 @@ type Image struct {
 	Url         string                `json:"url"`
 }
 
+func (image *Image) Get(filename string) (*Image, error) {
+	encoded := mongo.ImageCollection().FindOne(context.Background(), bson.D{{"name", filename}})
+
+	var img Image
+	err := encoded.Decode(&img)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &img, nil
+}
+
 func (image *Image) Save() (*Image, error) {
 	bucket, err := mongo.ImageGridFs()
 
@@ -59,11 +72,8 @@ func (image *Image) Save() (*Image, error) {
 	return image, nil
 }
 
-func (image *Image) Get(filename string) (*bytes.Buffer, error) {
-	encoded := mongo.ImageCollection().FindOne(context.Background(), bson.D{{"name", filename}})
-
-	var img Image
-	err := encoded.Decode(&img)
+func (image *Image) GetFile(filename string) (*bytes.Buffer, error) {
+	img, err := image.Get(filename)
 
 	if err != nil {
 		return nil, err
