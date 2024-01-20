@@ -59,10 +59,16 @@ func ResizeImage(file []byte, widthStr string, heightStr string) ([]byte, error)
 	}
 
 	if heightStr != "" {
-		width, err = strconv.Atoi(heightStr)
+		height, err = strconv.Atoi(heightStr)
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	if width == 0 && height == 0 {
+		bounds := imagingFile.Bounds()
+		width = bounds.Dx()
+		height = bounds.Dy()
 	}
 
 	resized := imaging.Resize(imagingFile, width, height, imaging.Lanczos)
