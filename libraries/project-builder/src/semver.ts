@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 
 import { runCommand } from './run-command.ts';
+import { gitUpdate } from './git-update.js';
 
 export async function semver(publishDirectory?: string) {
   console.info(
@@ -25,6 +26,7 @@ export async function semver(publishDirectory?: string) {
   }
 
   runCommand(`npm version ${semver}`);
+  gitUpdate('SemVer Bump');
 
   if (lodash.isNil(publishDirectory)) {
     runCommand('npm publish --access public');
