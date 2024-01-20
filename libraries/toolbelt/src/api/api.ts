@@ -8,7 +8,7 @@ import type { HandledError } from '../types/error.js';
 import type { ZodValidator } from '../types/zod-validator.js';
 
 type RequestConfig = {
-  bodySchema?: ZodValidator;
+  bodySchema?: ZodSchema;
   defaultRequestInit?: RequestInit;
   path: string;
   pathVariableLength?: number;

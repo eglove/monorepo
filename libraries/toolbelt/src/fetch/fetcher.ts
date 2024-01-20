@@ -1,4 +1,3 @@
-import type { IDBPDatabase } from 'idb';
 import { openDB } from 'idb';
 import { isNil } from 'lodash';
 
@@ -87,7 +86,7 @@ class Fetcher {
     }`;
   }
 
-  public async isExpired(): Promise<boolean> {
+  public async isExpired() {
     const database = await this.getRequestDatabase();
     const requestKey = this.getRequestKey();
 
@@ -103,10 +102,8 @@ class Fetcher {
     return new Date() >= cachedMeta.expires;
   }
 
-  private readonly getRequestDatabase = async (): Promise<
-    IDBPDatabase<unknown>
-  > => {
-    return openDB(Fetcher._DB_NAME, 1, {
+  private readonly getRequestDatabase = async () => {
+    return openDB<typeof Fetcher._DB_NAME>(Fetcher._DB_NAME, 1, {
       upgrade(database_) {
         const store = database_.createObjectStore(Fetcher._DB_NAME, {
           keyPath: Fetcher._DB_KEY,
