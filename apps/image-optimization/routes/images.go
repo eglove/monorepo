@@ -3,8 +3,10 @@ package routes
 import (
 	"ethang.dev/image-optimization/models"
 	"ethang.dev/image-optimization/utils"
+	"fmt"
 	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
+	"mime/multipart"
 	"net/http"
 	"strings"
 )
@@ -47,20 +49,13 @@ func imageInfoByFilename(context *gin.Context) {
 		return
 	}
 
-	width, height, err := utils.WidthHeight(image.Bytes())
-	if err != nil {
-		errorMap["Image.Dimensions"] = "failed to get image dimensions"
-		context.JSON(http.StatusNotFound, utils.NewResponseData(errorMap, nil))
-		return
-	}
-
 	info.Src = imageObject.Url
 	info.Alt = imageObject.Description
 	info.SrcSet = utils.SrcSet(imageObject.Url)
 	info.Sizes = utils.Sizes()
 	info.AspectRatio = ratio
-	info.Width = width
-	info.Height = height
+	info.Width = int(imageObject.Width)
+	info.Height = int(imageObject.Height)
 	context.JSON(http.StatusOK, utils.NewResponseData(nil, info))
 }
 
@@ -115,7 +110,12 @@ func createImage(context *gin.Context) {
 		context.JSON(http.StatusInternalServerError, utils.NewResponseData(errorMap, nil))
 		return
 	}
-	defer file.Close()
+	defer func(file multipart.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(file)
 
 	// Parse file
 	buffer := make([]byte, 512)
