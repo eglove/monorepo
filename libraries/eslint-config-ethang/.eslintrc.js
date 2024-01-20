@@ -13,6 +13,7 @@ module.exports = {
     'plugin:typescript-sort-keys/recommended',
     'plugin:functional/external-vanilla-recommended',
     'plugin:functional/external-typescript-recommended',
+    'plugin:sonarjs/recommended',
     'plugin:tailwindcss/recommended',
     'plugin:jsx-a11y/strict',
     'plugin:import/recommended',
@@ -25,6 +26,7 @@ module.exports = {
     'sort-keys-fix',
     'unused-imports',
     'prettier',
+    'sonarjs',
   ],
   'env': {
     'es2024': true,
