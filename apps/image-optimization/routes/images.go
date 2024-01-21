@@ -99,9 +99,16 @@ func createImage(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, utils.NewResponseData(response, nil))
 		return
 	}
-	imageModel.Name = imageRequestModel.Name
+	imageModel.Name = strings.ReplaceAll(imageRequestModel.Name, " ", "-")
 	imageModel.Description = imageRequestModel.Description
 	imageModel.File = imageRequestModel.File
+
+	_, err = imageModel.Get(imageModel.Name)
+	if err == nil {
+		errorMap["Image"] = "image with that name already exists"
+		context.JSON(http.StatusConflict, utils.NewResponseData(errorMap, nil))
+		return
+	}
 
 	// Read file
 	file, _, err := context.Request.FormFile("file")
