@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       id="Apps.topic" title="Apps">
+
+        <procedure title="GraphQL (Java/Spring/DGS)" collapsible="true">
+            <p>Will be used as a public gateway to other services. Uses Netflix's DGS GraphQL framework written in
+                Java and Spring
+                Boot.</p>
+        </procedure>
+        <procedure title="Image Optimization (GoLang/Gin)" collapsible="true">
+            <p>GoLang API for uploading images to a Mongo instance with GridFS. This will resize images on the fly
+                given search
+                parameters. (w, h). The details endpoint will return metadata important for working with images
+                correctly on web apps.</p>
+        </procedure>
+</topic>

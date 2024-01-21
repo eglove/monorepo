@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       id="LocalDeployment.topic" title="Local Deployment">
+
+    <p><a href="https://www.pulumi.com/">Pulumi</a> is currently used to build and publish docker images and
+        deploy to a local Kubernetes
+        cluster.</p>
+    <p><a href="https://github.com/eglove/monorepo/tree/main/resources">Pulumi Stack Definitions</a></p>
+    <procedure title="Deploying Kubernetes Locally" id="deploying-pulumi" collapsible="true">
+        <step>
+            <p>Prerequisites:</p>
+            <p><a href="https://www.pulumi.com/docs/install/">Pulumi CLI</a></p>
+            <p><a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a> w/ Kubernetes enabled (Do
+                NOT use minikube on Windows!)</p>
+        </step>
+        <step>
+            <p>Navigate to <code>/resources/pulumi</code></p>
+        </step>
+        <step>
+            <p>Run:</p>
+            <code-block>pulumi up</code-block>
+        </step>
+    </procedure>
+</topic>

@@ -7,4 +7,7 @@
                  start-page="Home.topic">
 
     <toc-element topic="Home.topic"/>
+    <toc-element topic="LocalDeployment.topic" />
+    <toc-element topic="Apps.topic" />
+    <toc-element topic="Libraries.topic" />
 </instance-profile>
