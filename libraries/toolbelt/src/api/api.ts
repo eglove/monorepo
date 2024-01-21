@@ -1,4 +1,4 @@
-import { isNil, keys, merge } from 'lodash';
+import { isNil, merge } from 'lodash';
 
 import { fetcher } from '../fetch/fetcher.ts';
 import { urlBuilder } from '../fetch/url-builder.ts';
@@ -150,17 +150,17 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
   private validatePathVariables(
     requestConfig: RequestConfig,
     options?: RequestOptions,
-  ): HandledError<undefined, Error> {
-    if (
-      !isNil(requestConfig.pathVariableLength) &&
-      keys(options?.pathVariables)?.length !== requestConfig.pathVariableLength
-    ) {
-      return {
-        error: new Error(
-          `invalid number of path variables. Expected: ${options?.pathVariables?.length} Received: ${requestConfig.pathVariableLength}`,
-        ),
-        isSuccess: false,
-      };
+  ): Validate<typeof requestConfig.pathVariableSchema> {
+    if (!isNil(requestConfig.pathVariableSchema)) {
+      const parsed = requestConfig.pathVariableSchema.safeParse(
+        options?.pathVariables,
+      );
+
+      if (!parsed.success) {
+        return { error: parsed.error, isSuccess: false };
+      }
+
+      return { data: parsed.data, isSuccess: true };
     }
 
     return { data: undefined, isSuccess: true };

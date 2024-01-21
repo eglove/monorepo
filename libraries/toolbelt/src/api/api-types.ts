@@ -7,7 +7,7 @@ export type RequestConfig = {
   bodySchema?: ZodValidator;
   defaultRequestInit?: RequestInit;
   path: string;
-  pathVariableLength?: number;
+  pathVariableSchema?: ZodValidator;
   responseSchema?: ZodValidator;
   searchParamSchema?: ZodValidator;
 };

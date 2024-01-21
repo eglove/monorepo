@@ -52,7 +52,10 @@ describe('api setup', () => {
       requests: {
         todo: {
           path: 'todos/:todoId/users/:userId',
-          pathVariableLength: 2,
+          pathVariableSchema: z.object({
+            todoId: z.number(),
+            userId: z.number(),
+          }),
         },
       },
     });
