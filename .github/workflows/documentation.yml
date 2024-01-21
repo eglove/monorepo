@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - 'resources/documentation/**'
-  workflow_dispatch:
 permissions:
   id-token: write
   pages: write
