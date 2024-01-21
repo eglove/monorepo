@@ -17,7 +17,7 @@ jobs:
       - name: Unzip
         uses: TonyBogdanov/zip@1.0
         with:
-          args: zip -qq -r ./resources/documentation/webHelpHOME2-all.zip ./documentation
+          args: unzip -qq ./resources/documentation/webHelpHOME2-all.zip -d ./documentation
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
