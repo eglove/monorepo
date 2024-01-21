@@ -1,5 +1,5 @@
 import { openDB } from 'idb';
-import { isNil } from 'lodash';
+import lodash from 'lodash';
 
 import { tryCatchAsync } from '../functional/try-catch.ts';
 import { isBrowser } from '../is/browser.ts';
@@ -47,7 +47,11 @@ class Fetcher {
   }
 
   public async fetch(): Promise<HandledError<Response | undefined, Error>> {
-    if (!isBrowser || isNil(this._cacheInterval) || this._cacheInterval <= 0) {
+    if (
+      !isBrowser ||
+      lodash.isNil(this._cacheInterval) ||
+      this._cacheInterval <= 0
+    ) {
       return tryCatchAsync(() => {
         return fetch(this._request);
       });

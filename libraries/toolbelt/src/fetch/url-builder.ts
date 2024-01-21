@@ -1,4 +1,4 @@
-import { forEach, isNil, isObject, isString } from 'lodash';
+import lodash from 'lodash';
 
 import { tryCatch } from '../functional/try-catch.ts';
 import type { HandledError } from '../types/error.js';
@@ -39,7 +39,7 @@ class UrlBuilder {
   private buildUrl(): HandledError<URL, Error> {
     let urlString = this._url.toString();
 
-    forEach(this.pathVariables, (variable, key) => {
+    lodash.forEach(this.pathVariables, (variable, key) => {
       const includesColon = tryCatch(() => {
         return urlString.includes(':');
       });
@@ -86,13 +86,13 @@ class UrlBuilder {
   private buildSearchParameters(parameters: UrlConfig['searchParams']) {
     let searchParameters = new URLSearchParams();
 
-    if (isString(parameters)) {
+    if (lodash.isString(parameters)) {
       searchParameters = new URLSearchParams(parameters);
     }
 
-    if (isObject(parameters)) {
-      forEach(parameters, (parameter, key) => {
-        if (!isNil(parameter)) {
+    if (lodash.isObject(parameters)) {
+      lodash.forEach(parameters, (parameter, key) => {
+        if (!lodash.isNil(parameter)) {
           searchParameters.append(key, String(parameter));
         }
       });

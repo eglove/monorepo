@@ -13,7 +13,7 @@ import type {
   Volume,
 } from 'convert';
 import { convert } from 'convert';
-import { isNil } from 'lodash';
+import lodash from 'lodash';
 
 import { isBigIntOrNumber } from '../is/big-int-or-number.ts';
 
@@ -80,9 +80,9 @@ class BetterNumber {
           : Number(number);
     }
 
-    if (isNil(locale) && typeof navigator !== 'undefined') {
+    if (lodash.isNil(locale) && typeof navigator !== 'undefined') {
       this._locale = navigator.language;
-    } else if (!isNil(locale)) {
+    } else if (!lodash.isNil(locale)) {
       this._locale = locale;
     }
   }
@@ -91,7 +91,7 @@ class BetterNumber {
     from: From,
     to: To,
   ) {
-    if (!isNil(this._number)) {
+    if (!lodash.isNil(this._number)) {
       // @ts-expect-error ugh... this gives proper autocomplete
       return convert(this._number, from).to(to);
     }
@@ -106,7 +106,7 @@ class BetterNumber {
   }
 
   public format(options?: FormatOptions): string | undefined {
-    if (isNil(this._number)) {
+    if (lodash.isNil(this._number)) {
       return undefined;
     }
 

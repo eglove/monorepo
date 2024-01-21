@@ -1,4 +1,4 @@
-import { isNil, merge } from 'lodash';
+import lodash from 'lodash';
 
 import { fetcher } from '../fetch/fetcher.ts';
 import { urlBuilder } from '../fetch/url-builder.ts';
@@ -91,7 +91,7 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
         return builder.url;
       }
 
-      const requestInit = merge(
+      const requestInit = lodash.merge(
         {},
         this.config.defaultRequestInit,
         requestConfig.defaultRequestInit,
@@ -109,7 +109,7 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
     requestConfig: RequestConfig,
     options?: RequestOptions,
   ): Validate<typeof requestConfig.bodySchema> {
-    if (!isNil(requestConfig.bodySchema)) {
+    if (!lodash.isNil(requestConfig.bodySchema)) {
       const bodyInit = options?.requestInit?.body;
 
       if (typeof bodyInit === 'string') {
@@ -132,7 +132,7 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
     requestConfig: RequestConfig,
     options?: RequestOptions,
   ): Validate<typeof requestConfig.searchParamSchema> {
-    if (!isNil(requestConfig.searchParamSchema)) {
+    if (!lodash.isNil(requestConfig.searchParamSchema)) {
       const parsed = requestConfig.searchParamSchema.safeParse(
         options?.searchParams,
       );
@@ -151,7 +151,7 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
     requestConfig: RequestConfig,
     options?: RequestOptions,
   ): Validate<typeof requestConfig.pathVariableSchema> {
-    if (!isNil(requestConfig.pathVariableSchema)) {
+    if (!lodash.isNil(requestConfig.pathVariableSchema)) {
       const parsed = requestConfig.pathVariableSchema.safeParse(
         options?.pathVariables,
       );

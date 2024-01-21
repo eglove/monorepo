@@ -1,4 +1,4 @@
-import { keys, values } from 'lodash';
+import lodash from 'lodash';
 
 import type { HandledError } from '../types/error.js';
 
@@ -7,8 +7,8 @@ type Promises<T> = Record<string, Promise<T>>;
 export async function promiseAll<T>(
   promises: Promises<T>,
 ): Promise<Record<string, HandledError<T, Error>>> {
-  const promiseKeys = keys(promises);
-  const promiseValues = values(promises);
+  const promiseKeys = lodash.keys(promises);
+  const promiseValues = lodash.values(promises);
 
   const results = await Promise.allSettled(promiseValues);
   const settledPromises: Record<string, HandledError<T, Error>> = {};

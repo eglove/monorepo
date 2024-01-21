@@ -9,8 +9,8 @@ dependencies:
     specifier: ^4.10.0
     version: 4.10.0(graphql@16.8.1)
   '@ethang/toolbelt':
-    specifier: ^1.0.3
-    version: 1.0.3(@total-typescript/ts-reset@0.5.1)(convert@4.14.1)(idb@8.0.0)(lodash@4.17.21)(zod@3.22.4)
+    specifier: ^1.0.4
+    version: 1.0.4(@total-typescript/ts-reset@0.5.1)(convert@4.14.1)(idb@8.0.0)(lodash@4.17.21)(zod@3.22.4)
   graphql:
     specifier: ^16.8.1
     version: 16.8.1
@@ -506,8 +506,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@ethang/toolbelt@1.0.3(@total-typescript/ts-reset@0.5.1)(convert@4.14.1)(idb@8.0.0)(lodash@4.17.21)(zod@3.22.4):
-    resolution: {integrity: sha512-LR2+zAeo9Q2tsLDB4rw6togX8/cpnHEnegz0BoAIogC81pUGUFs0pXHq4VIlCNj4m8eC8ov5jekjaUcgnoIZ3w==}
+  /@ethang/toolbelt@1.0.4(@total-typescript/ts-reset@0.5.1)(convert@4.14.1)(idb@8.0.0)(lodash@4.17.21)(zod@3.22.4):
+    resolution: {integrity: sha512-y5RPfv95I9OPDLAfp2QrQVTwImKGb3SqcR/0E4DmgkfDOMW/9lBG9AJ2GwLVuJyEm5/y5gEAlQeqU1M14xD5Sg==}
     peerDependencies:
       '@total-typescript/ts-reset': ^0.5.1
       convert: ^4.14.1
