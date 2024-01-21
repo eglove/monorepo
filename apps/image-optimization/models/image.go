@@ -6,6 +6,7 @@ import (
 	"ethang.dev/image-optimization/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	mongoDriver "go.mongodb.org/mongo-driver/mongo"
 	"mime/multipart"
 )
 
@@ -39,6 +40,30 @@ func (image *Image) Get(filename string) (*Image, error) {
 	}
 
 	return &img, nil
+}
+
+func (image *Image) GetAll() ([]*Image, error) {
+	cursor, err := mongo.ImageCollection().Find(context.Background(), bson.D{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var images []*Image
+	for cursor.Next(context.Background()) {
+		var image Image
+		err := cursor.Decode(&image)
+		if err != nil {
+			return nil, err
+		}
+		images = append(images, &image)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return images, err
 }
 
 func (image *Image) Save() (*Image, error) {
@@ -97,4 +122,14 @@ func (image *Image) GetFile(filename string) (*bytes.Buffer, error) {
 	}
 
 	return fileBuffer, nil
+}
+
+func (image *Image) Delete(filename string) (*mongoDriver.DeleteResult, error) {
+	result, err := mongo.ImageCollection().DeleteOne(context.Background(), bson.D{{"name", filename}})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
