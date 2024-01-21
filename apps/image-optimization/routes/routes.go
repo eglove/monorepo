@@ -6,11 +6,10 @@ import (
 )
 
 func RegisterRoutes(server *gin.Engine) {
+	imageGroup := server.Group("/")
 	server.GET("/healthcheck", func(context *gin.Context) {
 		context.JSON(http.StatusOK, "OK")
 	})
-
-	imageGroup := server.Group("/image")
 	imageGroup.GET("/:filename", imageByFilename)
 	imageGroup.GET("/:filename/info", imageInfoByFilename)
 	imageGroup.POST("/", createImage)

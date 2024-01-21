@@ -20,5 +20,8 @@ func main() {
 	routes.RegisterRoutes(server)
 
 	fmt.Println("Running on http://localhost:8080")
-	server.Run(":8080")
+	err = server.Run(":8080")
+	if err != nil {
+		fmt.Println(err)
+	}
 }
