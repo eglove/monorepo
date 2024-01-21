@@ -15,9 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Unzip
-        uses: TonyBogdanov/zip@1.0
-        with:
-          args: unzip -qq resources/documentation/webHelpHOME2-all.zip -d ./documentation
+        run: unzip resources/documentation/webHelpHOME2-all.zip -d documentation
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
