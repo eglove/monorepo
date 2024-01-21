@@ -3,7 +3,7 @@ package dev.ethang.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.JsonNode;
-import dev.ethang.spotifydemo.generated.types.ImageUpload;
+import dev.ethang.graphql.generated.types.ImageUpload;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MappedImageUpload extends ImageUpload {

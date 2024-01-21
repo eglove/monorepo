@@ -31,6 +31,6 @@ tasks.withType<Test> {
 }
 
 tasks.generateJava {
-	packageName = "dev.ethang.spotifydemo.generated"
+	packageName = "dev.ethang.graphql.generated"
 }
 
