@@ -11,7 +11,7 @@ permissions:
   pages: write
 env:
   INSTANCE: Writerside/home
-  ARTIFACT: resources/documentation/webHelpHOME2-all.zip
+  ARTIFACT: webHelpHOME2-all.zip
   DOCKER_VERSION: 232.10275
 jobs:
 #  build:
