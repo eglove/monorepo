@@ -12,6 +12,6 @@ export function apiImage() {
       dockerfile: `${projectRoot}/Dockerfile`,
       platform: 'linux/amd64',
     },
-    imageName: `ghcr.io/eglove/${imageOptimizationServiceName}:${versions.imageOptimization}`,
+    imageName: `ghcr.io/eglove/${imageOptimizationServiceName}:${versions.get('imageOptimization')}`,
   });
 }
