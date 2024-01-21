@@ -6,7 +6,6 @@ import type tsup from 'tsup';
 import { buildProject } from './build-project.ts';
 import { semver } from './semver.ts';
 import { updatePeerDependencies } from './update-peer-dependencies.ts';
-import { getHasChanges } from './util.ts';
 import type { scripts } from './version-bump.ts';
 import { versionBump } from './version-bump.ts';
 
@@ -49,17 +48,11 @@ export async function projectBuilder(
   if (isLibrary === true) {
     await updatePeerDependencies(ignorePeerDependencies);
 
-    if (
-      (await getHasChanges(branch)) &&
-      !lodash.isNil(publishDirectory) &&
-      !lodash.isNil(tsupOptions)
-    ) {
+    if (!lodash.isNil(publishDirectory) && !lodash.isNil(tsupOptions)) {
       await buildProject(publishDirectory, tsupOptions, tsConfigOverrides);
     }
 
-    if (await getHasChanges(branch)) {
-      await semver(publishDirectory);
-    }
+    await semver(publishDirectory);
   }
 
   await simpleGit().push();
