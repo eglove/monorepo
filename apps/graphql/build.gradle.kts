@@ -6,7 +6,7 @@ plugins {
 	id("com.netflix.dgs.codegen") version "6.1.0"
 }
 
-group = "com.example"
+group = "dev.ethang"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -18,6 +18,7 @@ repositories {
 }
 
 dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter")
@@ -30,6 +31,6 @@ tasks.withType<Test> {
 }
 
 tasks.generateJava {
-	packageName = "com.example.spotifydemo.generated"
+	packageName = "dev.ethang.spotifydemo.generated"
 }
 

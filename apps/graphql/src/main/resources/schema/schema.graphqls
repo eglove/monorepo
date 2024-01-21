@@ -1,58 +1,31 @@
-"Spotify catalog information for a single playlist."
-type Playlist {
-    "The spotify id for hte playlist."
-    id: ID!
-    "The name of the playlist."
-    name: String!
-    "The playlist description. _Only returned for modified, verified playlists, otherwise null_."
-    description: String
-    "The tracks of the playlist."
-    tracks: [Track!]!
-}
-
-"Spotify catalog information for a track."
-type Track {
-    "The Spotify ID for the track."
-    id: ID!
-    "The name of the track"
-    name: String!
-    "The track length in milliseconds."
-    durationMs: Int!
-    "Whether or not the track has explicit lyrics (true = yes it does; false = no it does not OR unknown)"
-    explicit: Boolean!
-    "The Spotify URI for the track."
-    uri: String!
-}
-
-type AddItemsToPlaylistPayload {
-    "Similar to HTTP status code, represents the status of the mutation"
-    code: Int!
-    "Indicates whether the mutation was successful"
-    success: Boolean!
-    "Human-readable message for the UI"
-    message: String!
-    "The playlist that contains the newly added items"
-    playlist: Playlist
-}
-
-input AddItemsToPlaylistInput {
-    "The Spotify ID of the playlist."
-    playlistId: ID!
-    "The position to insert the items, a zero-based index. For example, to insert the items in the first position: position=0; to insert the items in the third position: position=2. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body."
-    position: Int
-    "A comma-separated list of Spotify URIs to add, can be track or episode URIs. A maximum of 100 items can be added in one request."
-    uris: [String!]!
-}
+scalar Upload
 
 type Query {
-    "A list of Spotify featured playlists (shown, for example, on a Spotify player's 'Browse' tab)."
-    featuredPlaylists: [Playlist!]!
-    playlist(id: ID!): Playlist
+    imageDetails(filename: String!): ImageDetails
 }
 
 type Mutation {
-    "Add one or more items to a user's playlist."
-    addItemsToPlaylist(
-        input: AddItemsToPlaylistInput!
-    ): AddItemsToPlaylistPayload!
+    createImage(name: String!, description: String!, file: Upload): ImageUpload
 }
+
+type ImageDetails {
+    src: String!
+    alt: String!
+    width: Int!
+    height: Int!
+    aspectRatio: String!
+    srcSet: String!
+    sizes: String!
+}
+
+type ImageUpload {
+    id: String!
+    name: String!
+    description: String!
+    width: Int!
+    height: Int!
+    quality: Int!
+    imageId: String!
+    url: String!
+}
+
