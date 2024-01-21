@@ -5,21 +5,23 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js"
+    "dev": "tsx src/index.ts"
   },
   "eslintConfig": {
     "extends": "ethang"
   },
   "dependencies": {
     "@apollo/server": "^4.10.0",
-    "@ethang/toolbelt": "^1.0.2",
+    "@ethang/toolbelt": "^1.0.3",
     "graphql": "^16.8.1",
+    "lodash": "^4.17.21",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/node": "^20.11.5",
     "eslint-config-ethang": "^12.0.6",
+    "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   }
 }

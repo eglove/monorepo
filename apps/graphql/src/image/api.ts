@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const BASE_URL = 'http://localhost:80';
 
-const imageApi = new Api({
+export const imageApi = new Api({
   baseUrl: `${BASE_URL}/image`,
   requests: {
     imageCreate: {
@@ -14,11 +14,11 @@ const imageApi = new Api({
     },
     imageDetailsGet: {
       path: ':filename/info',
-      pathVariableLength: 1,
+      pathVariableSchema: z.object({ filename: z.string() }),
     },
     imageGet: {
       path: ':filename',
-      pathVariableLength: 1,
+      pathVariableSchema: z.object({ filename: z.string() }),
       searchParamSchema: z.object({
         h: z.string().optional(),
         w: z.string().optional(),

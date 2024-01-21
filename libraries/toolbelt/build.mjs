@@ -16,5 +16,6 @@ await projectBuilder('toolbelt', 'main', {
     minify: true,
     outDir: 'dist',
     entry: ['src'],
+    bundle: true,
   },
 });
