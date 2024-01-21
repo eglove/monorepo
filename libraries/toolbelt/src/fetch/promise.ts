@@ -4,7 +4,7 @@ import type { HandledError } from '../types/error.js';
 
 type Promises<T> = Record<string, Promise<T>>;
 
-export async function promiseAll<T>(
+export async function promiseAllSettled<T>(
   promises: Promises<T>,
 ): Promise<Record<string, HandledError<T, Error>>> {
   const promiseKeys = lodash.keys(promises);
