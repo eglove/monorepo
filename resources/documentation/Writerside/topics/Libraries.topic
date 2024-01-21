@@ -47,7 +47,7 @@
         <step>Isomorphic cookie reader</step>
         <step>Friendly promiseAll function for returning allSettled results in a clean, mapped format.</step>
         <step>Exports HTTP_STATUS object for all HTTP statuses with friendly names.</step>
-        <step>parse functioned with Zod and forced error handling for parsing JSON</step>
+        <step>parse functions with Zod and forced error handling for parsing JSON</step>
         <step>Type safe, error handled URL builder that helps deal with path variables and search parameters</step>
     </procedure>
     <procedure title="eslint-config-ethang" collapsible="true">
