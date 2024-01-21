@@ -1,1 +1,1 @@
-rootProject.name = "spotify-demo"
+rootProject.name = "ethang-graphql"

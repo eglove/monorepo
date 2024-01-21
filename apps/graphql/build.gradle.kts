@@ -34,3 +34,6 @@ tasks.generateJava {
 	packageName = "dev.ethang.graphql.generated"
 }
 
+tasks.bootJar {
+	archiveFileName.set("application.jar")
+}
