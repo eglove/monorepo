@@ -2,15 +2,14 @@ import type * as k8s from '@pulumi/kubernetes';
 
 import { mongoVolume } from './mongo-volume';
 
-export function mongo() {
-  const mongoPort = 27_017;
+export function mongo(mongoPort: number) {
   const mountPath = '/data/db';
 
   const { claimName, name } = mongoVolume();
 
   const container: k8s.types.input.core.v1.Container = {
     image: 'mongo',
-    name: 'mongodb',
+    name: 'mongo',
     ports: [{ containerPort: mongoPort }],
     volumeMounts: [
       {

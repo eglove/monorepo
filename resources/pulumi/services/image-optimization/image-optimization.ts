@@ -7,14 +7,13 @@ export const imageOptimizationServiceName = 'image-optimization';
 
 export function imageOptimization() {
   const apiPort = 8080;
-  const minioPort1 = 9000;
-  const minioPort2 = 9001;
+  const mongoPort = 27_017;
 
   const image = apiImage();
 
-  const clusterService = apiService(apiPort, minioPort1, minioPort2);
+  const clusterService = apiService(apiPort, mongoPort);
 
-  const mongoItems = mongo();
+  const mongoItems = mongo(mongoPort);
 
   apiDeployment(
     image.imageName,

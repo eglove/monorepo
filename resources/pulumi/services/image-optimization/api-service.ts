@@ -2,11 +2,7 @@ import * as k8s from '@pulumi/kubernetes';
 
 import { imageOptimizationServiceName } from './image-optimization';
 
-export function apiService(
-  apiPort: number,
-  minioPort1: number,
-  minioPort2: number,
-) {
+export function apiService(apiPort: number, mongoPort: number) {
   return new k8s.core.v1.Service(`${imageOptimizationServiceName}-cluster-ip`, {
     metadata: {
       name: `${imageOptimizationServiceName}-cluster-ip`,
@@ -19,14 +15,9 @@ export function apiService(
           targetPort: apiPort,
         },
         {
-          name: 'minio1',
-          port: minioPort1,
-          targetPort: minioPort1,
-        },
-        {
-          name: 'minio2',
-          port: minioPort2,
-          targetPort: minioPort2,
+          name: 'mongo',
+          port: mongoPort,
+          targetPort: mongoPort,
         },
       ],
       selector: {

@@ -1,10 +1,9 @@
 import * as k8s from '@pulumi/kubernetes';
 
 import { imageOptimization } from './services/image-optimization/image-optimization';
-import { userService } from './services/user-service/user-service';
 
-const { clusterService: userClusterService, port: userServicePort } =
-  userService();
+// const { clusterService: userClusterService, port: userServicePort } =
+//   userService();
 const { clusterService: imageService, apiPort: imagePort } =
   imageOptimization();
 
@@ -26,18 +25,18 @@ new k8s.networking.v1.Ingress('nginx-ingress', {
       {
         http: {
           paths: [
-            {
-              backend: {
-                service: {
-                  name: userClusterService.metadata.name,
-                  port: {
-                    number: userServicePort,
-                  },
-                },
-              },
-              path: '/user(/|$)(.*)',
-              pathType: 'ImplementationSpecific',
-            },
+            // {
+            //   backend: {
+            //     service: {
+            //       name: userClusterService.metadata.name,
+            //       port: {
+            //         number: userServicePort,
+            //       },
+            //     },
+            //   },
+            //   path: '/user(/|$)(.*)',
+            //   pathType: 'ImplementationSpecific',
+            // },
             {
               backend: {
                 service: {
