@@ -4,62 +4,26 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'resources/documentation/**'
 permissions:
   id-token: write
   pages: write
-env:
-  INSTANCE: Writerside/home
-  ARTIFACT: webHelpHOME2-all.zip
-  DOCKER_VERSION: 232.10275
 jobs:
-#  build:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#      - name: Build Writerside docs using Docker
-#        uses: JetBrains/writerside-github-action@v4
-#      - name: Upload documentation
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: docs
-#          path: |
-#            artifacts/${{ env.ARTIFACT }}
-#            artifacts/report.json
-#          retention-days: 7
-#  test:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download artifacts
-#        uses: actions/download-artifact@v1
-#        with:
-#          name: docs
-#          path: artifacts
-#      - name: Test documentation
-#        uses: JetBrains/writerside-checker-action@v1
-#        with:
-#          instance: ${{ env.INSTANCE }}
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
+      - name: Unzip
+        uses: TonyBogdanov/zip@1.0
         with:
-          name: docs
-      - name: Unzip artifact
-        run: unzip -O UTF-8 -qq ${{ env.ARTIFACT }} -d dir
+          args: zip -qq -r ./resources/documentation/webHelpHOME2-all.zip ./documentation
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: dir
+          path: ./documentation
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
