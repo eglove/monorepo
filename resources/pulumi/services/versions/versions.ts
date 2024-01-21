@@ -1,1 +1,1 @@
-export const versions = { imageOptimization: '1.0.0' };
+export const versions = { imageOptimization: '1.0.1' };
