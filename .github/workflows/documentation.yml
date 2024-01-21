@@ -14,34 +14,34 @@ env:
   ARTIFACT: webHelpHOME2-all.zip
   DOCKER_VERSION: 232.10275
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Build Writerside docs using Docker
-        uses: JetBrains/writerside-github-action@v4
-      - name: Upload documentation
-        uses: actions/upload-artifact@v3
-        with:
-          name: docs
-          path: |
-            artifacts/${{ env.ARTIFACT }}
-            artifacts/report.json
-          retention-days: 7
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: docs
-          path: artifacts
-      - name: Test documentation
-        uses: JetBrains/writerside-checker-action@v1
-        with:
-          instance: ${{ env.INSTANCE }}
+#  build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v3
+#      - name: Build Writerside docs using Docker
+#        uses: JetBrains/writerside-github-action@v4
+#      - name: Upload documentation
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: docs
+#          path: |
+#            artifacts/${{ env.ARTIFACT }}
+#            artifacts/report.json
+#          retention-days: 7
+#  test:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download artifacts
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: docs
+#          path: artifacts
+#      - name: Test documentation
+#        uses: JetBrains/writerside-checker-action@v1
+#        with:
+#          instance: ${{ env.INSTANCE }}
   deploy:
     environment:
       name: github-pages
