@@ -39,6 +39,7 @@ class UrlBuilder {
   private buildUrl(): HandledError<URL, Error> {
     let urlString = this._url.toString();
 
+    // eslint-disable-next-line unicorn/no-array-for-each
     lodash.forEach(this.pathVariables, (variable, key) => {
       const includesColon = tryCatch(() => {
         return urlString.includes(':');
@@ -91,6 +92,7 @@ class UrlBuilder {
     }
 
     if (lodash.isObject(parameters)) {
+      // eslint-disable-next-line unicorn/no-array-for-each
       lodash.forEach(parameters, (parameter, key) => {
         if (!lodash.isNil(parameter)) {
           searchParameters.append(key, String(parameter));

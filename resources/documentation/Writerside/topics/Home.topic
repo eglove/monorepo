@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       id="Home" title="EthanG Monorepo">
+
+    <title>
+        It's a monorepo that's not a monorepo
+    </title>
+    <p>After using NX, TurboRepo, and just plain workspaces, I find monorepos add unnecessary complexity that can be
+        more
+        easily managed by custom CLIs.</p>
+    <chapter title="Local Deployment" id="local-deployment">
+        <p><a href="https://www.pulumi.com/">Pulumi</a> is currently used to build and publish docker images and
+            deploy to a local Kubernetes
+            cluster.</p>
+        <p><a href="https://github.com/eglove/monorepo/tree/main/resources">Pulumi Stack Definitions</a></p>
+        <procedure title="Deploying Kubernetes Locally" id="deploying-pulumi" collapsible="true">
+            <step>
+                <p>Prerequisites:</p>
+                <p><a href="https://www.pulumi.com/docs/install/">Pulumi CLI</a></p>
+                <p><a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a> w/ Kubernetes enabled (Do NOT use minikube on Windows!)</p>
+            </step>
+            <step>
+                <p>Navigate to <code>/resources/pulumi</code></p>
+            </step>
+            <step>
+                <p>Run:</p>
+                <code-block>pulumi up</code-block>
+            </step>
+        </procedure>
+    </chapter>
+    <chapter title="Apps" id="apps">
+        <procedure title="GraphQL (Java/Spring/DGS)" collapsible="true">
+            <p>Will be used as a public gateway to other services. Uses Netflix's DGS GraphQL framework written in
+                Java and Spring
+                Boot.</p>
+        </procedure>
+        <procedure title="Image Optimization (GoLang/Gin)" collapsible="true">
+            <p>GoLang API for uploading images to a Mongo instance with GridFS. This will resize images on the fly
+                given search
+                parameters. (w, h). The details endpoint will return metadata important for working with images
+                correctly on web apps.</p>
+        </procedure>
+    </chapter>
+    <chapter title="Libraries" id="libraries">
+        <procedure title="@ethang/toolbelt" collapsible="true">
+            <p>Many utilities and tools for TypeScript projects.</p>
+            <step>
+                <p>Most utilities have forced error handling.</p>
+                <code-block lang="typescript">
+                    export type HandledError&lt;T, E&gt; =
+                      | { data: T; isSuccess: true }
+                      | { error: E; isSuccess: false };
+                </code-block>
+            </step>
+            <step>Functional and forced error handling with tryCatch and tryCatchAsync functions</step>
+            <step>fetcher function that combines Cache API and IndexedDB for caching requests on an interval</step>
+            <step>
+                <p>API class for centralizing and calling API's</p>
+                <code-block lang="typescript">
+                    const api = new API({
+                        baseUrl: 'http://example.com',
+                        cacheInterval: 100,
+                        defaultRequestInit: { method: 'GET' },
+                        requests: {
+                            search: {
+                                bodySchema: z.object({ filter: z.string() }),
+                                defaultRequestInit: {
+                                    method: 'POST',
+                                },
+                                path: 'search',
+                            },
+                        }
+                    });
+                </code-block>
+                <code-block lang="typescript">
+                    const response = api.fetch.search({
+                        requestInit: { body: { filter: 'shoes' } }
+                    });
+                </code-block>
+            </step>
+            <step>betterNumber() helps deal with type safety around receiving and converting with Number() and builds in locale and conversion methods</step>
+            <step>Isomorphic cookie reader</step>
+            <step>Friendly promiseAll function for returning allSettled results in a clean, mapped format.</step>
+            <step>Exports HTTP_STATUS object for all HTTP statuses with friendly names.</step>
+            <step>parse functioned with Zod and forced error handling for parsing JSON</step>
+            <step>Type safe, error handled URL builder that helps deal with path variables and search parameters</step>
+        </procedure>
+        <procedure title="eslint-config-ethang" collapsible="true">
+            <p>Unapologetically strict eslint-config. 100's of eslint rules from xo and unicorn as well as additions
+                for stricter
+                TypeScript environments.</p>
+            <code-block>pnpm i -D eslint-config-ethang</code-block>
+            <code-block>"extends": "ethang"</code-block>
+        </procedure>
+        <procedure title="@ethang/hooks" collapsible="true">
+            <step><b>use-event-listener</b> Make use of an abort controller to abstract out the need to
+                clean up event listeners in React useEffects
+            </step>
+            <step><b>use-animation-interval</b> A set interval alternative that takes into account browser
+                framerate.
+            </step>
+            <step><b>use-form</b> Idiomatic React patterns to handle client-side form state and validation
+            </step>
+            <step><b>use-local-storage</b> Local storage hook that exposes the same interface as useState
+            </step>
+            <step><b>use-set</b> useState for JavaScript Sets. Makes add, delete, and clear methods
+                immutable.
+            </step>
+            <step><b>use-map</b> useState for JavaScript Maps. Makes set, delete, and clear methods
+                immutable.
+            </step>
+            <step><b>use-is-onscreen</b> Intersection Observer hook to tell if an element is on screen.
+            </step>
+            <step><b>use-dimensions</b> Get or track the size of an element</step>
+            <step><b>use-copy-clipboard</b> Copy text to clipboard with custom success duration.</step>
+            <step><b>use-fullscreen</b> Toggle full-screen state for an element</step>
+            <step><b>use-mouse-position</b> Track mouse position</step>
+            <step><b>use-window-size</b> Track the size of the current window.</step>
+            <step><b>use-toggle</b> true/false toggle</step>
+        </procedure>
+        <procedure title="@ethang/project-builder" collapsible="true">
+            <p>Scripts for updating and publishing NPM libraries.</p>
+        </procedure>
+    </chapter>
+</topic>
