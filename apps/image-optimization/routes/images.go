@@ -21,6 +21,20 @@ type ImageInfo struct {
 	Sizes       string `json:"sizes"`
 }
 
+func images(context *gin.Context) {
+	var imageModel models.Image
+	errorMap := utils.NewErrorMap()
+
+	images, err := imageModel.GetAll()
+	if err != nil {
+		errorMap["Images"] = "failed to get images"
+		context.JSON(http.StatusNotFound, utils.NewResponseData(errorMap, nil))
+		return
+	}
+
+	context.JSON(http.StatusOK, utils.NewResponseData(nil, images))
+}
+
 func imageInfoByFilename(context *gin.Context) {
 	filename := context.Param("filename")
 	var info ImageInfo

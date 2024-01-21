@@ -41,6 +41,30 @@ func (image *Image) Get(filename string) (*Image, error) {
 	return &img, nil
 }
 
+func (image *Image) GetAll() ([]*Image, error) {
+	cursor, err := mongo.ImageCollection().Find(context.Background(), bson.D{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var images []*Image
+	for cursor.Next(context.Background()) {
+		var image Image
+		err := cursor.Decode(&image)
+		if err != nil {
+			return nil, err
+		}
+		images = append(images, &image)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return images, err
+}
+
 func (image *Image) Save() (*Image, error) {
 	bucket, err := mongo.ImageGridFs()
 

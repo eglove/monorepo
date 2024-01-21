@@ -12,5 +12,6 @@ func RegisterRoutes(server *gin.Engine) {
 	})
 	imageGroup.GET("/:filename", imageByFilename)
 	imageGroup.GET("/:filename/info", imageInfoByFilename)
+	imageGroup.GET("/", images)
 	imageGroup.POST("/", createImage)
 }
