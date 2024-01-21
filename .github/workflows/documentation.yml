@@ -15,10 +15,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Unzip
-        run: unzip resources/documentation/webHelpHOME2-all.zip -d documentation
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Unzip
+        run: unzip resources/documentation/webHelpHOME2-all.zip -d documentation
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
