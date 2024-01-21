@@ -191,3 +191,18 @@ func createImage(context *gin.Context) {
 
 	context.JSON(http.StatusOK, utils.NewResponseData(nil, savedImage))
 }
+
+func deleteImage(context *gin.Context) {
+	var imageModel models.Image
+	errorMap := utils.NewErrorMap()
+	filename := context.Param("filename")
+
+	result, err := imageModel.Delete(filename)
+	if err != nil {
+		errorMap["Image"] = "failed to delete image"
+		context.JSON(http.StatusInternalServerError, utils.NewResponseData(errorMap, nil))
+		return
+	}
+
+	context.JSON(http.StatusOK, utils.NewResponseData(nil, result))
+}

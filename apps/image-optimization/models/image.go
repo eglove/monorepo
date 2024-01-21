@@ -6,6 +6,7 @@ import (
 	"ethang.dev/image-optimization/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	mongoDriver "go.mongodb.org/mongo-driver/mongo"
 	"mime/multipart"
 )
 
@@ -121,4 +122,14 @@ func (image *Image) GetFile(filename string) (*bytes.Buffer, error) {
 	}
 
 	return fileBuffer, nil
+}
+
+func (image *Image) Delete(filename string) (*mongoDriver.DeleteResult, error) {
+	result, err := mongo.ImageCollection().DeleteOne(context.Background(), bson.D{{"name", filename}})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
