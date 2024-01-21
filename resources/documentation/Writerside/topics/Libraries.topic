@@ -21,23 +21,23 @@
             <p>API class for centralizing and calling API's</p>
             <code-block lang="typescript">
                 const api = new API({
-                baseUrl: 'http://example.com',
-                cacheInterval: 100,
-                defaultRequestInit: { method: 'GET' },
-                requests: {
-                search: {
-                bodySchema: z.object({ filter: z.string() }),
-                defaultRequestInit: {
-                method: 'POST',
-                },
-                path: 'search',
-                },
-                }
+                  baseUrl: 'http://example.com',
+                  cacheInterval: 100,
+                  defaultRequestInit: { method: 'GET' },
+                  requests: {
+                    search: {
+                      bodySchema: z.object({ filter: z.string() }),
+                      defaultRequestInit: {
+                        method: 'POST',
+                      },
+                      path: 'search',
+                    },
+                  }
                 });
             </code-block>
             <code-block lang="typescript">
                 const response = api.fetch.search({
-                requestInit: { body: { filter: 'shoes' } }
+                  requestInit: { body: { filter: 'shoes' } }
                 });
             </code-block>
         </step>
