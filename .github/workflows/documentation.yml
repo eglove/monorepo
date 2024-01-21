@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '/resources/documentation'
+      - 'resources/documentation/**'
   workflow_dispatch:
 permissions:
   id-token: write
