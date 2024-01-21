@@ -4,9 +4,9 @@
        xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
        id="Home.topic" title="EthanG Monorepo">
 
-    <title>
+    <p>
         It's a monorepo that's not a monorepo
-    </title>
+    </p>
     <p>After using NX, TurboRepo, and just plain workspaces, I find monorepos add unnecessary complexity that can be
         more
         easily managed by custom CLIs.</p>
