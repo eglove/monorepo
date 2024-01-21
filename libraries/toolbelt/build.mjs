@@ -9,12 +9,12 @@ await projectBuilder('toolbelt', 'main', {
     include: ['src'],
     compilerOptions: {
       emitDeclarationOnly: true,
-    }
+    },
   },
   tsupOptions: {
     format: ['cjs', 'esm'],
     minify: true,
     outDir: 'dist',
-    entry: ['src']
-  }
-})
+    entry: ['src'],
+  },
+});
