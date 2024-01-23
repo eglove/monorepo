@@ -5,8 +5,8 @@ import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
 import dev.ethang.datasources.ImageClient;
+import dev.ethang.graphql.generated.types.Image;
 import dev.ethang.graphql.generated.types.ImageDetails;
-import dev.ethang.graphql.generated.types.ImageUpload;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,10 +25,20 @@ public class ImageDataFetcher {
         return this.imageClient.imageDetailsRequest(filename);
     }
 
+    @DgsQuery
+    public Image[] images() {
+        return this.imageClient.images();
+    }
+
     @DgsMutation
-    public ImageUpload createImage(DataFetchingEnvironment dfe, @InputArgument String name, @InputArgument String description) {
+    public Image createImage(DataFetchingEnvironment dfe, @InputArgument String name, @InputArgument String description) {
         MultipartFile file = dfe.getArgument("file");
 
         return this.imageClient.uploadImage(name, description, file);
+    }
+
+    @DgsMutation
+    public Image deleteImage(@InputArgument String name) {
+        return this.imageClient.deleteImage(name);
     }
 }

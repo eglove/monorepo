@@ -1,11 +1,13 @@
 scalar Upload
 
 type Query {
+    images: [Image]!
     imageDetails(filename: String!): ImageDetails
 }
 
 type Mutation {
-    createImage(name: String!, description: String!, file: Upload): ImageUpload
+    createImage(name: String!, description: String!, file: Upload): Image
+    deleteImage(name: String!): Image
 }
 
 type ImageDetails {
@@ -18,7 +20,7 @@ type ImageDetails {
     sizes: String!
 }
 
-type ImageUpload {
+type Image {
     id: String!
     name: String!
     description: String!

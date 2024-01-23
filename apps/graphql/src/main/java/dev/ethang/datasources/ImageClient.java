@@ -1,7 +1,7 @@
 package dev.ethang.datasources;
 
 import dev.ethang.models.MappedImageDetails;
-import dev.ethang.models.MappedImageUpload;
+import dev.ethang.models.MappedImage;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -23,7 +23,11 @@ public class ImageClient {
                 .body(MappedImageDetails.class);
     }
 
-    public MappedImageUpload uploadImage(String name, String description, MultipartFile file) {
+    public MappedImage[] images() {
+        return client.get().uri("/").retrieve().body(MappedImage[].class);
+    }
+
+    public MappedImage uploadImage(String name, String description, MultipartFile file) {
         MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("name", name);
         requestBody.add("description", description);
@@ -35,6 +39,14 @@ public class ImageClient {
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(requestBody)
                 .retrieve()
-                .body(MappedImageUpload.class);
+                .body(MappedImage.class);
+    }
+
+    public MappedImage deleteImage(String name) {
+        return client
+                .delete()
+                .uri("/{filename}", name)
+                .retrieve()
+                .body(MappedImage.class);
     }
 }
