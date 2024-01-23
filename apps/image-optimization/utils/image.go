@@ -98,7 +98,7 @@ func ResizeImage(file []byte, widthStr string, heightStr string) ([]byte, error)
 }
 
 func SrcSet(imageUrl string) string {
-	viewPorts := []int{500, 1000, 1500, 2000, 2500, 3000, 3500, 4000}
+	viewPorts := []int{320, 375, 425, 768, 1024, 1440, 2560}
 
 	var srcSet string
 	for _, viewport := range viewPorts {
@@ -111,7 +111,7 @@ func SrcSet(imageUrl string) string {
 }
 
 func Sizes() string {
-	viewPorts := []int{500, 1000, 1500, 2000, 2500, 3000, 3500, 4000}
+	viewPorts := []int{320, 375, 425, 768, 1024, 1440, 2560}
 
 	var sizes string
 	for _, viewport := range viewPorts {
