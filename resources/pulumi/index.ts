@@ -33,18 +33,7 @@ new k8s.networking.v1.Ingress('nginx-ingress', {
                   port: { number: graphqlPort },
                 },
               },
-              pathType: 'ImplementationSpecific',
-            },
-            {
-              backend: {
-                service: {
-                  name: imageService.metadata.name,
-                  port: {
-                    number: imagePort,
-                  },
-                },
-              },
-              path: '/image(/|$)(.*)',
+              path: '/graphql(/|$)(.*)',
               pathType: 'ImplementationSpecific',
             },
           ],

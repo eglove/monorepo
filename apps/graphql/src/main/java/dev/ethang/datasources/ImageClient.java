@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class ImageClient {
-    private static final String IMAGE_API_URL = "http://localhost/image";
+    private static final String IMAGE_API_URL = "http://image-optimization-cluster-ip.default:8080";
 
     private final RestClient client = RestClient.builder().baseUrl(IMAGE_API_URL).build();
 
