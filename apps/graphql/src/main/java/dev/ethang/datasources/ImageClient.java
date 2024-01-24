@@ -1,5 +1,8 @@
 package dev.ethang.datasources;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import dev.ethang.models.MappedImageCollection;
+import dev.ethang.models.MappedImageDelete;
 import dev.ethang.models.MappedImageDetails;
 import dev.ethang.models.MappedImage;
 import org.springframework.http.MediaType;
@@ -23,8 +26,8 @@ public class ImageClient {
                 .body(MappedImageDetails.class);
     }
 
-    public MappedImage[] images() {
-        return client.get().uri("/").retrieve().body(MappedImage[].class);
+    public MappedImageCollection images() {
+        return client.get().uri("/").retrieve().body(MappedImageCollection.class);
     }
 
     public MappedImage uploadImage(String name, String description, MultipartFile file) {
@@ -42,11 +45,11 @@ public class ImageClient {
                 .body(MappedImage.class);
     }
 
-    public MappedImage deleteImage(String name) {
+    public MappedImageDelete deleteImage(String name) {
         return client
                 .delete()
                 .uri("/{filename}", name)
                 .retrieve()
-                .body(MappedImage.class);
+                .body(MappedImageDelete.class);
     }
 }

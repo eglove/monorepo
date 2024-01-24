@@ -1,13 +1,13 @@
 scalar Upload
 
 type Query {
-    images: [Image]!
+    images: [Image]
     imageDetails(filename: String!): ImageDetails
 }
 
 type Mutation {
     createImage(name: String!, description: String!, file: Upload): Image
-    deleteImage(name: String!): Image
+    deleteImage(name: String!): ImageDelete
 }
 
 type ImageDetails {
@@ -29,5 +29,9 @@ type Image {
     quality: Int!
     imageId: String!
     url: String!
+}
+
+type ImageDelete {
+    deletedCount: Int!
 }
 
