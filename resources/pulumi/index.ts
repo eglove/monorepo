@@ -3,8 +3,7 @@ import * as k8s from '@pulumi/kubernetes';
 import { graphql } from './services/graphql/graphql';
 import { imageOptimization } from './services/image-optimization/image-optimization';
 
-const { clusterService: imageService, apiPort: imagePort } =
-  imageOptimization();
+imageOptimization();
 
 const { graphqlService, graphqlPort } = graphql();
 
