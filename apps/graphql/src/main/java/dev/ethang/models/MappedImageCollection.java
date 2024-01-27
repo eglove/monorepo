@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.ethang.graphql.generated.types.Image;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,7 +19,7 @@ public class MappedImageCollection {
         this.images = mapper.readValue(data.traverse(), new TypeReference<List<MappedImage>>(){});
     }
 
-    public List<MappedImage> getPlaylists() {
+    public List<MappedImage> getImages() {
         return this.images;
     }
 }

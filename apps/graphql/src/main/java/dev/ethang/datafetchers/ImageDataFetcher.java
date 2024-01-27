@@ -34,7 +34,7 @@ public class ImageDataFetcher {
     public List<MappedImage> images() {
         MappedImageCollection response = imageClient.images();
 
-        return response.getPlaylists();
+        return response.getImages();
     }
 
     @DgsMutation
