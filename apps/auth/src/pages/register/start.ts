@@ -1,9 +1,9 @@
 import { HTTP_STATUS } from '@ethang/toolbelt/constants/http';
 import { tryCatchAsync } from '@ethang/toolbelt/functional/try-catch';
+import { isNil } from '@ethang/toolbelt/is/nil';
 import type Prisma from '@prisma/client';
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 import type { AuthenticatorTransportFuture } from '@simplewebauthn/types';
-import { isNil } from 'lodash';
 import { z } from 'zod';
 
 import { database } from '../../database/prisma-client.ts';
@@ -28,19 +28,36 @@ export async function POST(parameters: AstroRequest) {
 
   const { username } = body.data;
 
-  const userResult = await tryCatchAsync(() => {
+  let userResult = await tryCatchAsync(() => {
     return database.user.findUnique({
       select: {
         Authenticators: true,
         id: true,
-        username: true,
       },
       where: { username },
     });
   });
 
+  if (!userResult.isSuccess) {
+    return standardResponse(null, [{ user: userResult.error.message }], {
+      status: HTTP_STATUS.UNAUTHORIZED,
+    });
+  }
+
+  if (isNil(userResult.data)) {
+    userResult = await tryCatchAsync(() => {
+      return database.user.create({
+        data: { username },
+        select: {
+          Authenticators: true,
+          id: true,
+        },
+      });
+    });
+  }
+
   if (!userResult.isSuccess || isNil(userResult.data)) {
-    return standardResponse(null, [{ user: 'user not found' }], {
+    return standardResponse(null, [{ user: 'failed to register user' }], {
       status: HTTP_STATUS.UNAUTHORIZED,
     });
   }
@@ -55,7 +72,7 @@ export async function POST(parameters: AstroRequest) {
       residentKey: 'preferred',
       userVerification: 'preferred',
     },
-    excludeCredentials: user.Authenticators.map(
+    excludeCredentials: userResult.data.Authenticators.map(
       (authenticator: Prisma.Authenticator) => {
         return {
           id: authenticator.credentialId as unknown as BufferSource,
@@ -68,14 +85,14 @@ export async function POST(parameters: AstroRequest) {
     rpID,
     rpName,
     userID: user.id,
-    userName: user.username,
+    userName: username,
   });
 
   const updateResult = await tryCatchAsync(() => {
     return database.user.update({
       data: { currentChallenge: options.challenge },
       select: { id: true },
-      where: { username: user.username },
+      where: { username },
     });
   });
 

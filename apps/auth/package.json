@@ -15,11 +15,10 @@
   "dependencies": {
     "@astrojs/check": "^0.4.1",
     "@astrojs/node": "^8.1.0",
-    "@ethang/toolbelt": "^1.0.5",
+    "@ethang/toolbelt": "^1.0.6",
     "@prisma/client": "5.8.1",
     "@simplewebauthn/server": "^9.0.1",
     "astro": "^4.2.6",
-    "lodash": "^4.17.21",
     "prisma": "^5.8.1",
     "typescript": "^5.3.3",
     "zod": "^3.22.4"
