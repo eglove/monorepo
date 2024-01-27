@@ -5,13 +5,15 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"os"
 )
 
 var Client *mongo.Client
 
 func Setup() error {
 	var err error
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017/")
+	connStr := os.Getenv("MONGODB_URI")
+	clientOptions := options.Client().ApplyURI(connStr)
 	Client, err = mongo.Connect(context.Background(), clientOptions)
 
 	if err != nil {
