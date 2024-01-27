@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CredentialDeviceType {
+  singleDevice
+  multiDevice
+}
+
+enum AuthenticatorTransport {
+  usb
+  ble
+  nfc
+  internal
+}
+
+model User {
+  id               String          @id @default(uuid())
+  username         String          @unique
+  currentChallenge String?
+  Authenticators   Authenticator[]
+}
+
+model Authenticator {
+  id                   String                   @id @default(uuid())
+  credentialId         String
+  credentialPublicKey  Bytes
+  counter              BigInt
+  credentialDeviceType CredentialDeviceType
+  credentialBackedUp   Boolean
+  transports           AuthenticatorTransport[]
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id])
+}

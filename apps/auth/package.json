@@ -1,0 +1,32 @@
+{
+  "name": "auth",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "eslintConfig": {
+    "extends": "ethang"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.4.1",
+    "@astrojs/node": "^8.1.0",
+    "@ethang/toolbelt": "^1.0.5",
+    "@prisma/client": "5.8.1",
+    "@simplewebauthn/server": "^9.0.1",
+    "astro": "^4.2.6",
+    "lodash": "^4.17.21",
+    "prisma": "^5.8.1",
+    "typescript": "^5.3.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@simplewebauthn/types": "^9.0.1",
+    "@types/lodash": "^4.14.202",
+    "eslint-config-ethang": "^12.0.6"
+  }
+}

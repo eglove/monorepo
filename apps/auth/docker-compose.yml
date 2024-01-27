@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4321:4321"
+    depends_on:
+      - db
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+          target: .
+          ignore:
+            - node_modules/
+  db:
+    image: postgres:16.1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
