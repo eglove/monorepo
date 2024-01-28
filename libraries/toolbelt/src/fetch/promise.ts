@@ -1,4 +1,4 @@
-import type { HandledError } from '../types/error.js';
+import type { HandledError } from '../types/error.ts';
 
 type Promises<T> = Record<string, Promise<T>>;
 

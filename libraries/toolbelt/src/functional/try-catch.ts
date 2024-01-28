@@ -1,4 +1,4 @@
-import type { HandledError } from '../types/error.js';
+import type { HandledError } from '../types/error.ts';
 
 export function tryCatch<T extends () => ReturnType<T>>(
   function_: T,

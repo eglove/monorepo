@@ -1,8 +1,8 @@
 import type { z } from 'zod';
 
 import { tryCatchAsync } from '../functional/try-catch.ts';
-import type { HandledError } from '../types/error.js';
-import type { ZodValidator } from '../types/zod-validator.js';
+import type { HandledError } from '../types/error.ts';
+import type { ZodValidator } from '../types/zod-validator.ts';
 
 export async function parseFetchJson<Z extends ZodValidator>(
   value: Request | Response,

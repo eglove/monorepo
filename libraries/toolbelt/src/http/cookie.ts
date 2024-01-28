@@ -1,5 +1,5 @@
-import { isNil } from '../is/nil.js';
-import type { HandledError } from '../types/error.js';
+import { isNil } from '../is/nil.ts';
+import type { HandledError } from '../types/error.ts';
 
 export function getCookieValue(
   cookieName: string,

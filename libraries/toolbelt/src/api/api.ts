@@ -1,9 +1,9 @@
 import { fetcher } from '../fetch/fetcher.ts';
 import { urlBuilder } from '../fetch/url-builder.ts';
-import { isNil } from '../is/nil.js';
+import { isNil } from '../is/nil.ts';
 import { parseJson } from '../json/json.ts';
-import { merge } from '../object/merge.js';
-import type { HandledError } from '../types/error.js';
+import { merge } from '../object/merge.ts';
+import type { HandledError } from '../types/error.ts';
 import type {
   ApiConfig,
   FetchFunction,
@@ -11,8 +11,8 @@ import type {
   RequestConfig,
   RequestFunction,
   RequestOptions,
-} from './api-types.js';
-import type { Validate } from './validate-types.js';
+} from './api-types.ts';
+import type { Validate } from './validate-types.ts';
 
 export class Api<T extends Record<string, Readonly<RequestConfig>>> {
   private readonly config: ApiConfig<T>;

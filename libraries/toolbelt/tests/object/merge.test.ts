@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { merge } from '../../src/object/merge.js';
+import { merge } from '../../src/object/merge.ts';
 
 describe('merge', () => {
   it('should return original if objects are equal', () => {

@@ -1,8 +1,8 @@
 import { tryCatch } from '../functional/try-catch.ts';
-import { isNil } from '../is/nil.js';
-import { isObject } from '../is/object.js';
-import { isString } from '../is/string.js';
-import type { HandledError } from '../types/error.js';
+import { isNil } from '../is/nil.ts';
+import { isObject } from '../is/object.ts';
+import { isString } from '../is/string.ts';
+import type { HandledError } from '../types/error.ts';
 
 export type UrlConfig = {
   pathVariables?: Record<string, string | number>;

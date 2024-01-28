@@ -1,8 +1,8 @@
 import type { MergeDeep } from 'type-fest';
 
-import { isEmpty } from '../is/empty.js';
+import { isEmpty } from '../is/empty.ts';
 import { isNil } from '../is/nil.ts';
-import { isObject } from '../is/object.js';
+import { isObject } from '../is/object.ts';
 
 type ValidObject = Record<string | symbol | number, unknown> | object;
 type ValidObjectOptional = ValidObject | undefined;

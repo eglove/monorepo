@@ -2,8 +2,8 @@ import { openDB } from 'idb';
 
 import { tryCatchAsync } from '../functional/try-catch.ts';
 import { isBrowser } from '../is/browser.ts';
-import { isNil } from '../is/nil.js';
-import type { HandledError } from '../types/error.js';
+import { isNil } from '../is/nil.ts';
+import type { HandledError } from '../types/error.ts';
 
 type FetcherOptions = {
   cacheInterval?: number;

@@ -15,7 +15,7 @@ import type {
 import { convert } from 'convert';
 
 import { isBigIntOrNumber } from '../is/big-int-or-number.ts';
-import { isNil } from '../is/nil.js';
+import { isNil } from '../is/nil.ts';
 
 type FormatOptions = Intl.NumberFormatOptions & BigIntToLocaleStringOptions;
 

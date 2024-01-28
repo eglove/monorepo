@@ -1,4 +1,5 @@
-import { getTag } from '../object/get-tag.js';
+import { getTag } from '../object/get-tag.ts';
+import { isNil } from './nil.ts';
 
 export function isString(value: unknown): value is string {
   const type = typeof value;
@@ -6,7 +7,7 @@ export function isString(value: unknown): value is string {
   return (
     type === 'string' ||
     (type === 'object' &&
-      value != null &&
+      !isNil(value) &&
       !Array.isArray(value) &&
       getTag(value) === '[object String]')
   );

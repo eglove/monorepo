@@ -1,7 +1,7 @@
 import type { z } from 'zod';
 
-import type { HandledError } from '../types/error.js';
-import type { ZodValidator } from '../types/zod-validator.js';
+import type { HandledError } from '../types/error.ts';
+import type { ZodValidator } from '../types/zod-validator.ts';
 
 export function parseJson<Z extends ZodValidator>(
   text: string,

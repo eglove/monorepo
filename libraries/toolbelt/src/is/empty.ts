@@ -1,4 +1,4 @@
-import { isNil } from './nil.js';
+import { isNil } from './nil.ts';
 
 export function isEmpty<T>(value: T): boolean {
   if (isNil(value)) {
