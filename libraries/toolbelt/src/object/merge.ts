@@ -8,68 +8,76 @@ type ValidObject = Record<string | symbol | number, unknown> | object;
 type ValidObjectOptional = ValidObject | undefined;
 
 type MergedItem<
-  T extends ValidObject,
-  U extends ValidObject,
-  A extends boolean,
-> = Merged<T, U, A>[Extract<keyof U, string>];
+  Target extends ValidObject,
+  Source extends ValidObject,
+  ArrayMerge extends boolean,
+> = Merged<Target, Source, ArrayMerge>[Extract<keyof Source, string>];
 
-type Merged<T, U, A extends boolean> = MergeDeep<
-  T,
-  U,
-  { arrayMergeMode: A extends true ? 'spread' : 'replace' }
+type Merged<Target, Source, ArrayMerge extends boolean> = MergeDeep<
+  Target,
+  Source,
+  { arrayMergeMode: ArrayMerge extends true ? 'spread' : 'replace' }
 >;
 
 type RecursiveMerge<
-  T extends ValidObject,
-  S extends unknown[],
-  A extends boolean,
-> = S extends [infer U, ...infer Rest]
+  Target extends ValidObject,
+  Sources extends unknown[],
+  ArrayMerge extends boolean,
+> = Sources extends [infer Source, ...infer Rest]
   ? Rest extends unknown[]
-    ? RecursiveMerge<Merged<T, U, A>, Rest, A>
-    : Merged<T, U, A>
-  : T;
+    ? RecursiveMerge<Merged<Target, Source, ArrayMerge>, Rest, ArrayMerge>
+    : Merged<Target, Source, ArrayMerge>
+  : Target;
 
 export function merge<
-  T extends ValidObject,
-  S extends ValidObjectOptional[],
-  A extends boolean,
+  Target extends ValidObject,
+  Sources extends ValidObjectOptional[],
+  ArrayMerge extends boolean,
 >(
-  target: T,
-  isMergingArrays: A,
-  ...objects: S
-): Simplify<RecursiveMerge<T, S, A>> {
+  target: Target,
+  isMergingArrays: ArrayMerge,
+  ...objects: Sources
+): Simplify<RecursiveMerge<Target, Sources, ArrayMerge>> {
   let output = target;
 
   for (const object of objects) {
     if (!isEmpty(object)) {
-      output = mergeTwo(output, object, isMergingArrays) as T;
+      output = mergeTwo(output, object, isMergingArrays) as Target;
     }
   }
 
-  return output as RecursiveMerge<T, S, A>;
+  return output as RecursiveMerge<Target, Sources, ArrayMerge>;
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 function mergeTwo<
-  T extends ValidObject,
-  U extends ValidObject,
-  A extends boolean,
->(target?: T, source?: U, isMergingArrays = false as A): Merged<T, U, A> {
+  Target extends ValidObject,
+  Source extends ValidObject,
+  ArrayMerge extends boolean,
+>(
+  target?: Target,
+  source?: Source,
+  isMergingArrays = false as ArrayMerge,
+): Merged<Target, Source, ArrayMerge> {
   if (isNil(target) || isNil(source)) {
-    return (target ?? source ?? {}) as Merged<T, U, A>;
+    return (target ?? source ?? {}) as Merged<Target, Source, ArrayMerge>;
   }
 
-  const output = { ...target } as Merged<T, U, A>;
+  const output = { ...target } as Merged<Target, Source, ArrayMerge>;
 
   for (const key in source) {
     if (Object.hasOwn(source, key)) {
-      const targetValue = target[key as unknown as keyof T];
-      const sourceValue = source[key as keyof U];
+      const targetValue = target[key as unknown as keyof Target];
+      const sourceValue = source[key as keyof Source];
 
       if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
         output[key] = isMergingArrays
-          ? ([...targetValue, ...sourceValue] as MergedItem<T, U, A>)
-          : (sourceValue as MergedItem<T, U, A>);
+          ? ([...targetValue, ...sourceValue] as MergedItem<
+              Target,
+              Source,
+              ArrayMerge
+            >)
+          : (sourceValue as MergedItem<Target, Source, ArrayMerge>);
       } else if (isObject(targetValue) && isObject(sourceValue)) {
         // @ts-expect-error deep/recursive typing issue, ignore this here
         output[key] = mergeTwo(
@@ -78,7 +86,7 @@ function mergeTwo<
           isMergingArrays,
         );
       } else {
-        output[key] = sourceValue as MergedItem<T, U, A>;
+        output[key] = sourceValue as MergedItem<Target, Source, ArrayMerge>;
       }
     }
   }
