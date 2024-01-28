@@ -42,7 +42,7 @@ export function merge(
   let output = target;
 
   for (const object of objects) {
-    if (!isNil(object) && !isEmpty(object)) {
+    if (!isEmpty(object)) {
       output = mergeTwo(output, object);
     }
   }
