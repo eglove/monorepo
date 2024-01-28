@@ -45,6 +45,7 @@ export function merge<
   return output as RecursiveMerge<T, S, A>;
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 function mergeTwo<
   T extends ValidObject,
   U extends ValidObject,
