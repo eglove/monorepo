@@ -1,4 +1,4 @@
-import type { MergeDeep } from 'type-fest';
+import type { MergeDeep, Simplify } from 'type-fest';
 
 import { isEmpty } from '../is/empty.ts';
 import { isNil } from '../is/nil.ts';
@@ -33,7 +33,11 @@ export function merge<
   T extends ValidObject,
   S extends ValidObjectOptional[],
   A extends boolean,
->(target: T, isMergingArrays: A, ...objects: S): RecursiveMerge<T, S, A> {
+>(
+  target: T,
+  isMergingArrays: A,
+  ...objects: S
+): Simplify<RecursiveMerge<T, S, A>> {
   let output = target;
 
   for (const object of objects) {
