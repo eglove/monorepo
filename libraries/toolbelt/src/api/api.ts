@@ -91,12 +91,13 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
         return builder.url;
       }
 
-      const requestInit = merge(
-        {},
+      const requestInit: RequestInit = merge(
+        {} as RequestInit,
+        false,
         this.config.defaultRequestInit,
         requestConfig.defaultRequestInit,
         options?.requestInit,
-      ) as RequestInit;
+      );
 
       return {
         data: new Request(builder.url.data, requestInit),

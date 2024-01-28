@@ -21,10 +21,10 @@ type Merged<T, U, A extends boolean> = MergeDeep<
 
 type RecursiveMerge<
   T extends ValidObject,
-  S extends any[],
+  S extends unknown[],
   A extends boolean,
 > = S extends [infer U, ...infer Rest]
-  ? Rest extends any[]
+  ? Rest extends unknown[]
     ? RecursiveMerge<Merged<T, U, A>, Rest, A>
     : Merged<T, U, A>
   : T;
