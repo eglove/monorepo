@@ -33,11 +33,7 @@ export function merge<
   Target extends ValidObject,
   Sources extends ValidObjectOptional[],
   ArrayMerge extends boolean,
->(
-  target: Target,
-  isMergingArrays: ArrayMerge,
-  ...objects: Sources
-): Simplify<RecursiveMerge<Target, Sources, ArrayMerge>> {
+>(target: Target, isMergingArrays: ArrayMerge, ...objects: Sources) {
   let output = target;
 
   for (const object of objects) {
@@ -46,7 +42,7 @@ export function merge<
     }
   }
 
-  return output as RecursiveMerge<Target, Sources, ArrayMerge>;
+  return output as Simplify<RecursiveMerge<Target, Sources, ArrayMerge>>;
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -54,11 +50,7 @@ function mergeTwo<
   Target extends ValidObject,
   Source extends ValidObject,
   ArrayMerge extends boolean,
->(
-  target?: Target,
-  source?: Source,
-  isMergingArrays = false as ArrayMerge,
-): Merged<Target, Source, ArrayMerge> {
+>(target?: Target, source?: Source, isMergingArrays = false as ArrayMerge) {
   if (isNil(target) || isNil(source)) {
     return (target ?? source ?? {}) as Merged<Target, Source, ArrayMerge>;
   }
