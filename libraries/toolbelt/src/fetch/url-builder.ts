@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/consistent-destructuring */
 import { tryCatch } from '../functional/try-catch.ts';
 import { isNil } from '../is/nil.ts';
 import { isObject } from '../is/object.ts';
@@ -37,33 +38,36 @@ class UrlBuilder {
     return { data: url.data.toString(), isSuccess: true };
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   private buildUrl(): HandledError<URL, Error> {
     let urlString = this._url.toString();
 
     const { pathVariables } = this;
     if (!isNil(pathVariables)) {
       for (const key in pathVariables) {
-        const includesColon = tryCatch(() => {
-          return urlString.includes(':');
-        });
-
-        if (!includesColon.isSuccess) {
-          return includesColon;
-        }
-
-        if (includesColon.data) {
-          const replaced = tryCatch(() => {
-            return urlString.replaceAll(
-              new RegExp(':' + key, 'g'),
-              String(pathVariables[key]),
-            );
+        if (Object.hasOwn(pathVariables, key)) {
+          const includesColon = tryCatch(() => {
+            return urlString.includes(':');
           });
 
-          if (!replaced.isSuccess) {
-            return replaced;
+          if (!includesColon.isSuccess) {
+            return includesColon;
           }
 
-          urlString = replaced.data;
+          if (includesColon.data) {
+            const replaced = tryCatch(() => {
+              return urlString.replaceAll(
+                new RegExp(':' + key, 'g'),
+                String(pathVariables[key]),
+              );
+            });
+
+            if (!replaced.isSuccess) {
+              return replaced;
+            }
+
+            urlString = replaced.data;
+          }
         }
       }
     }
@@ -96,7 +100,9 @@ class UrlBuilder {
 
     if (isObject(parameters)) {
       for (const key in parameters) {
-        searchParameters.append(key, String(parameters[key]));
+        if (Object.hasOwn(parameters, key)) {
+          searchParameters.append(key, String(parameters[key]));
+        }
       }
     }
 
