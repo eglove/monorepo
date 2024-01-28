@@ -1,5 +1,4 @@
-import lodash from 'lodash';
-
+import { isNil } from '../is/nil.js';
 import type { HandledError } from '../types/error.js';
 
 export function getCookieValue(
@@ -11,7 +10,7 @@ export function getCookieValue(
       ? cookieSource
       : cookieSource.get('Cookie');
 
-  if (lodash.isNil(cookies)) {
+  if (isNil(cookies)) {
     return { error: new Error('cookies not found'), isSuccess: false };
   }
 
