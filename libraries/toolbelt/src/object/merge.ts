@@ -35,10 +35,7 @@ export function merge<
   sourceThree: W,
 ): Merged<Merged<Merged<T, U>, V>, W>;
 
-export function merge(
-  target: ValidObject,
-  ...objects: Array<ValidObject | undefined>
-) {
+export function merge(target: ValidObject, ...objects: ValidObjectOptional[]) {
   let output = target;
 
   for (const object of objects) {
