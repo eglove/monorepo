@@ -21,7 +21,7 @@ export type ApiConfig<T extends Record<string, Readonly<RequestConfig>>> = {
 
 export type RequestOptions = {
   pathVariables?: Record<string, string | number>;
-  requestInit?: RequestInit | Record<string, unknown>;
+  requestInit?: RequestInit;
   searchParams?: Record<string, string | number | undefined>;
 };
 

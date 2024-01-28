@@ -1,8 +1,8 @@
 import { openDB } from 'idb';
-import lodash, { isNil } from 'lodash';
 
 import { tryCatchAsync } from '../functional/try-catch.ts';
 import { isBrowser } from '../is/browser.ts';
+import { isNil } from '../is/nil.js';
 import type { HandledError } from '../types/error.js';
 
 type FetcherOptions = {
@@ -47,11 +47,7 @@ class Fetcher {
   }
 
   public async fetch(): Promise<HandledError<Response | undefined, Error>> {
-    if (
-      !isBrowser ||
-      isNil(this._cacheInterval) ||
-      this._cacheInterval <= 0
-    ) {
+    if (!isBrowser || isNil(this._cacheInterval) || this._cacheInterval <= 0) {
       return tryCatchAsync(() => {
         return fetch(this._request);
       });

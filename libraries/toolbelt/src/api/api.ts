@@ -1,8 +1,8 @@
-import lodash from 'lodash';
-
 import { fetcher } from '../fetch/fetcher.ts';
 import { urlBuilder } from '../fetch/url-builder.ts';
+import { isNil } from '../is/nil.js';
 import { parseJson } from '../json/json.ts';
+import { merge } from '../object/merge.js';
 import type { HandledError } from '../types/error.js';
 import type {
   ApiConfig,
@@ -91,12 +91,12 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
         return builder.url;
       }
 
-      const requestInit = lodash.merge(
+      const requestInit = merge(
         {},
         this.config.defaultRequestInit,
         requestConfig.defaultRequestInit,
         options?.requestInit,
-      );
+      ) as RequestInit;
 
       return {
         data: new Request(builder.url.data, requestInit),
@@ -109,7 +109,7 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
     requestConfig: RequestConfig,
     options?: RequestOptions,
   ): Validate<typeof requestConfig.bodySchema> {
-    if (!lodash.isNil(requestConfig.bodySchema)) {
+    if (!isNil(requestConfig.bodySchema)) {
       const bodyInit = options?.requestInit?.body;
 
       if (typeof bodyInit === 'string') {
@@ -132,7 +132,7 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
     requestConfig: RequestConfig,
     options?: RequestOptions,
   ): Validate<typeof requestConfig.searchParamSchema> {
-    if (!lodash.isNil(requestConfig.searchParamSchema)) {
+    if (!isNil(requestConfig.searchParamSchema)) {
       const parsed = requestConfig.searchParamSchema.safeParse(
         options?.searchParams,
       );
@@ -151,7 +151,7 @@ export class Api<T extends Record<string, Readonly<RequestConfig>>> {
     requestConfig: RequestConfig,
     options?: RequestOptions,
   ): Validate<typeof requestConfig.pathVariableSchema> {
-    if (!lodash.isNil(requestConfig.pathVariableSchema)) {
+    if (!isNil(requestConfig.pathVariableSchema)) {
       const parsed = requestConfig.pathVariableSchema.safeParse(
         options?.pathVariables,
       );

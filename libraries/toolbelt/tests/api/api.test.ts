@@ -23,7 +23,7 @@ describe('api setup', () => {
     });
 
     const request = testApi.request.search({
-      requestInit: { body: { name: 'abc' } },
+      requestInit: { body: JSON.stringify({ name: 'abc' }) },
     });
 
     if (request.isSuccess) {

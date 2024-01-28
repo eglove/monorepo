@@ -1,6 +1,7 @@
-import lodash from 'lodash';
-
 import { tryCatch } from '../functional/try-catch.ts';
+import { isNil } from '../is/nil.js';
+import { isObject } from '../is/object.js';
+import { isString } from '../is/string.js';
 import type { HandledError } from '../types/error.js';
 
 export type UrlConfig = {
@@ -39,31 +40,33 @@ class UrlBuilder {
   private buildUrl(): HandledError<URL, Error> {
     let urlString = this._url.toString();
 
-    // eslint-disable-next-line unicorn/no-array-for-each
-    lodash.forEach(this.pathVariables, (variable, key) => {
-      const includesColon = tryCatch(() => {
-        return urlString.includes(':');
-      });
-
-      if (!includesColon.isSuccess) {
-        return includesColon;
-      }
-
-      if (includesColon.data) {
-        const replaced = tryCatch(() => {
-          return urlString.replaceAll(
-            new RegExp(':' + key, 'g'),
-            String(variable),
-          );
+    const { pathVariables } = this;
+    if (!isNil(pathVariables)) {
+      for (const key in pathVariables) {
+        const includesColon = tryCatch(() => {
+          return urlString.includes(':');
         });
 
-        if (!replaced.isSuccess) {
-          return replaced;
+        if (!includesColon.isSuccess) {
+          return includesColon;
         }
 
-        urlString = replaced.data;
+        if (includesColon.data) {
+          const replaced = tryCatch(() => {
+            return urlString.replaceAll(
+              new RegExp(':' + key, 'g'),
+              String(pathVariables[key]),
+            );
+          });
+
+          if (!replaced.isSuccess) {
+            return replaced;
+          }
+
+          urlString = replaced.data;
+        }
       }
-    });
+    }
 
     const url = tryCatch(() => {
       return new URL(urlString, this._config?.urlBase);
@@ -87,17 +90,14 @@ class UrlBuilder {
   private buildSearchParameters(parameters: UrlConfig['searchParams']) {
     let searchParameters = new URLSearchParams();
 
-    if (lodash.isString(parameters)) {
+    if (isString(parameters)) {
       searchParameters = new URLSearchParams(parameters);
     }
 
-    if (lodash.isObject(parameters)) {
-      // eslint-disable-next-line unicorn/no-array-for-each
-      lodash.forEach(parameters, (parameter, key) => {
-        if (!lodash.isNil(parameter)) {
-          searchParameters.append(key, String(parameter));
-        }
-      });
+    if (isObject(parameters)) {
+      for (const key in parameters) {
+        searchParameters.append(key, String(parameters[key]));
+      }
     }
 
     return searchParameters;
