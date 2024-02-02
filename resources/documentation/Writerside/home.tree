@@ -9,5 +9,9 @@
     <toc-element topic="Home.topic"/>
     <toc-element topic="LocalDeployment.topic" />
     <toc-element topic="Apps.topic" />
-    <toc-element topic="Libraries.topic" />
+    <toc-element topic="ethang-toolbelt.topic">
+        <toc-element topic="API.topic"/>
+    </toc-element>
+    <toc-element topic="OtherLibraries.topic" >
+    </toc-element>
 </instance-profile>

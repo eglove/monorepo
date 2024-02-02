@@ -3,53 +3,8 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
 <topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
-       title="Libraries" id="Libraries.topic">
+       title="Other Libraries" id="Libraries.topic">
 
-    <procedure title="@ethang/toolbelt" collapsible="true">
-        <p>Many utilities and tools for TypeScript projects.</p>
-        <step>
-            <p>Most utilities have forced error handling.</p>
-            <code-block lang="typescript">
-                export type HandledError&lt;T, E&gt; =
-                | { data: T; isSuccess: true }
-                | { error: E; isSuccess: false };
-            </code-block>
-        </step>
-        <step>Functional and forced error handling with tryCatch and tryCatchAsync functions</step>
-        <step>fetcher function that combines Cache API and IndexedDB for caching requests on an interval</step>
-        <step>
-            <p>API class for centralizing and calling API's</p>
-            <code-block lang="typescript">
-                const api = new API({
-                  baseUrl: 'http://example.com',
-                  cacheInterval: 100,
-                  defaultRequestInit: { method: 'GET' },
-                  requests: {
-                    search: {
-                      bodySchema: z.object({ filter: z.string() }),
-                      defaultRequestInit: {
-                        method: 'POST',
-                      },
-                      path: 'search',
-                    },
-                  }
-                });
-            </code-block>
-            <code-block lang="typescript">
-                const response = api.fetch.search({
-                  requestInit: { body: { filter: 'shoes' } }
-                });
-            </code-block>
-        </step>
-        <step>betterNumber() helps deal with type safety around receiving and converting with Number() and builds in
-            locale and conversion methods
-        </step>
-        <step>Isomorphic cookie reader</step>
-        <step>Friendly promiseAll function for returning allSettled results in a clean, mapped format.</step>
-        <step>Exports HTTP_STATUS object for all HTTP statuses with friendly names.</step>
-        <step>parse functions with Zod and forced error handling for parsing JSON</step>
-        <step>Type safe, error handled URL builder that helps deal with path variables and search parameters</step>
-    </procedure>
     <procedure title="eslint-config-ethang" collapsible="true">
         <p>Unapologetically strict eslint-config. 100's of eslint rules from xo and unicorn as well as additions
             for stricter

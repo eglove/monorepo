@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="@ethang/toolbelt" id="ethang-toolbelt">
+
+    <list type="decimal">
+        <li>Many utilities and tools for TypeScript projects.</li>
+        <li>
+            Most utilities have forced error handling.
+            <code-block lang="typescript">
+                export type HandledError&lt;T, E&gt; =
+                | { data: T; isSuccess: true }
+                | { error: E; isSuccess: false };
+            </code-block>
+        </li>
+        <li>Functional and forced error handling with tryCatch and tryCatchAsync functions</li>
+        <li>fetcher function that combines Cache API and IndexedDB for caching requests on an interval</li>
+        <li>
+            API class for centralizing and calling API's
+            <code-block lang="typescript">
+                const api = new API({
+                  baseUrl: 'http://example.com',
+                  cacheInterval: 100,
+                  defaultRequestInit: { method: 'GET' },
+                  requests: {
+                    search: {
+                      bodySchema: z.object({ filter: z.string() }),
+                      defaultRequestInit: {
+                        method: 'POST',
+                      },
+                      path: 'search',
+                    },
+                  }
+                });
+            </code-block>
+            <code-block lang="typescript">
+                const response = api.fetch.search({
+                  requestInit: { body: { filter: 'shoes' } }
+                });
+            </code-block>
+        </li>
+        <li>betterNumber() helps deal with type safety around receiving and converting with Number() and builds in locale and conversion methods</li>
+        <li>Isomorphic cookie reader</li>
+        <li>Friendly promiseAll function for returning allSettled results in a clean, mapped format.</li>
+        <li>Exports HTTP_STATUS object for all HTTP statuses with friendly names.</li>
+        <li>parse functions with Zod and forced error handling for parsing JSON</li>
+        <li>Type safe, error handled URL builder that helps deal with path variables and search parameters</li>
+    </list>
+</topic>

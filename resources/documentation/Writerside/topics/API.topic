@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="API" id="API">
+
+    <p>Setup API in one central object</p>
+    <code-block lang="typescript">
+        import { Api } from '@ethang/toolbelt/api/api';
+
+        const typicodeApi = new Api({
+          baseUrl: 'https://jsonplaceholder.typicode.com',
+          cacheInterval: 60, // 60 second cache
+          requests: {
+            todoUser: {
+              path: 'todos/:todoId/users/:userId',
+              pathVariableSchema: z.object({
+                todoId: z.number(),
+                userId: z.number(),
+              }),
+            },
+            todos: {
+              path: 'todos',
+              searchParamSchema: z.object({
+                filterBy?: z.string(),
+                orderBy?: z.string(),
+              }),
+            },
+          },
+        })
+    </code-block>
+    <p>Get plain Request objects for any endpoint</p>
+    <code-block lang="typescript">
+        // Returns Request object with error handler
+        const todoRequest = typicodeApi.request.todoUser({
+          pathVariables: {
+            todoId: 1,
+            userId: 3,
+          },
+        });
+    </code-block>
+    <p>Uses error handling standard to this library</p>
+    <code-block lang="typescript">
+        if (!todoRequest.isSuccess) {
+          console.error(todoRequest.error);
+        }
+
+        // https://developer.mozilla.org/en-US/docs/Web/API/Request
+        const request: Request = todoRequest.data;
+    </code-block>
+    <p>Fetch data, override global cache interval.</p>
+    <code-block lang="typescript">
+        const response = await api.fetch.todos({
+          cacheInterval: 0, // override global setting, setting to undefined, or passing 0 skips cache
+          requestInit: {}, // Standard request options for fetch
+          searchParams: { filterBy: 'food', orderBy: 'type' }, // ?filterBy=food&amp;orderBy=type
+        });
+    </code-block>
+    <p>Handle errors functionally.</p>
+    <code-block lang="typescript">
+        import { parseFetchJson } from '@ethang/toolbelt/fetch/json';
+
+        if (!response.isSuccess) {
+          console.error(response.error);
+        }
+
+        const json = await parseFetchJson(response, z.object({...}));
+
+        if (!json.isSuccess) {
+          console.error(json.error);
+        }
+
+        const data = json.data;
+    </code-block>
+</topic>
