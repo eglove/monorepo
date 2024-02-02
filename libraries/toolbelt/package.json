@@ -20,9 +20,9 @@
   },
   "devDependencies": {
     "@ethang/project-builder": "^1.1.19",
-    "@types/node": "^20.11.9",
+    "@types/node": "^20.11.16",
     "eslint-config-ethang": "^12.0.6",
-    "type-fest": "^4.10.1",
+    "type-fest": "^4.10.2",
     "vitest": "^1.2.2"
   },
   "peerDependencies": {
