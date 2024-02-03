@@ -14,12 +14,12 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.4.1",
-    "@astrojs/node": "^8.1.0",
-    "@ethang/toolbelt": "^1.0.6",
-    "@prisma/client": "5.8.1",
+    "@astrojs/node": "^8.2.0",
+    "@ethang/toolbelt": "^1.0.9",
+    "@prisma/client": "5.9.1",
     "@simplewebauthn/server": "^9.0.1",
-    "astro": "^4.2.6",
-    "prisma": "^5.8.1",
+    "astro": "^4.3.2",
+    "prisma": "^5.9.1",
     "typescript": "^5.3.3",
     "zod": "^3.22.4"
   },
