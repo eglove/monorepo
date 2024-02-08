@@ -1,4 +1,5 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
+
 import { animationInterval } from './use-animation-interval';
 
 type UseDimensionsReturn = {

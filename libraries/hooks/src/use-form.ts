@@ -1,6 +1,7 @@
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from 'react';
 import { useState } from 'react';
-import { z, ZodError } from 'zod';
+import type { z } from 'zod';
+import { ZodError } from 'zod';
 
 export type FieldErrors<StateType> =
   | Record<keyof StateType, string[] | undefined | null>

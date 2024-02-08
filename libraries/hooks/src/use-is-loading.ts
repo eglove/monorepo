@@ -24,5 +24,5 @@ export function useIsLoading<T, E>(callback: () => Promise<T>) {
     setCaller(callFunction);
   }, [callback]);
 
-  return { isLoading, caller, results, error };
+  return { caller, error, isLoading, results };
 }
