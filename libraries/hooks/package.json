@@ -2,7 +2,7 @@
   "name": "@ethang/hooks",
   "author": "Ethan Glover",
   "license": "ISC",
-  "version": "1.5.21",
+  "version": "1.5.22",
   "main": "index.js",
   "scripts": {
     "lint": "eslint . --fix"
