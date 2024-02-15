@@ -27,6 +27,7 @@ export type UseFormReturn<StateType> = {
   setFieldErrors: Dispatch<SetStateAction<FieldErrors<StateType>>>;
   setFormError: Dispatch<SetStateAction<string | undefined>>;
   setFormState: Dispatch<SetStateAction<StateType>>;
+  setValue: (key: keyof StateType, value: StateType[typeof key]) => void;
 };
 
 const setAll = <ObjectType extends Record<string, unknown>, ValueType>(
@@ -162,6 +163,15 @@ export const useForm = <StateType extends Record<string, unknown>>(
     }
   };
 
+  const setValue = (key: keyof StateType, value: StateType[typeof key]) => {
+    setFormState(previousState => {
+      return {
+        ...previousState,
+        [key]: value,
+      };
+    });
+  };
+
   return {
     clearFieldErrors,
     clearForm,
@@ -174,5 +184,6 @@ export const useForm = <StateType extends Record<string, unknown>>(
     setFieldErrors,
     setFormError,
     setFormState,
+    setValue,
   };
 };
